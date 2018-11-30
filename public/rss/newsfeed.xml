@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+        <title>Scranton Herald News Feed</title>
+        <link>https://mayar.abertay.ac.uk/~1800833/twix</link>
+        <description>The best news source in all of Scranton</description>
+
+        <item>
+            <title>Scranton Area Paper Company Dunder Mifflin Apologizes to Valued Client</title>
+            <link>http://localhost:8080/uni/index.php?controller=article&amp;action=single&amp;id=3</link>
+            <description>Dunder Mifflin Paper Products was thrust into damage control early Thursday morning as the company reported that 500 cases of 24lb cream letter stock paper had been shipped with an obscene watermark...
+            </description>
+        </item>
+
+        <item>
+            <title>Local Businessman Pledges College Tuition to Third Graders </title>
+            <link>http://localhost:8080/uni/index.php?controller=article&amp;action=single&amp;id=1</link>
+            <description>Michael G. Scott, Regional Manager at Dunder Mifflin, is a modest guy who likes to wear jeans, cherishes his "World's Best Boss" mug, and lacks a college education. He thought about playing for the...</description>
+        </item>
+
+        <item>
+            <title>Local Man Grills Foot</title>
+            <link>http://localhost:8080/uni/index.php?controller=article&amp;action=single&amp;id=5</link>
+            <description>Praesent at tortor at sapien faucibus auctor. Mauris blandit tincidunt erat pharetra pharetra. Nam interdum tincidunt mauris, vel sagittis ipsum auctor ac. In hac habitasse platea dictumst. Donec...</description>
+        </item>
+
+        <item>
+            <title>Scranton Strangler Strikes Again </title>
+            <link>http://localhost:8080/uni/index.php?controller=article&amp;action=single&amp;id=2</link>
+            <description>An elderly widow who lived alone was found strangled Tuesday night in her east Scranton apartment. Nulla pulvinar dictum orci, in mattis eros volutpat sit amet. Integer id massa nulla. Curabitur...</description>
+        </item>
+
+        <item>
+            <title>The Battle of Schrute Farms Lie!</title>
+            <link>http://localhost:8080/uni/index.php?controller=article&amp;action=single&amp;id=4</link>
+            <description>The Battle of Schrute Farms was a codename for a gathering of artists and poets during the Civil War. After tracking down a historian, Oscar Martinez learn that the Battle of Schrute Farms did in fact...</description>
+        </item>
+
+        <item>
+            <title>Man Creates Real Fire for Fake Fire Drill </title>
+            <link>http://localhost:8080/uni/index.php?controller=article&amp;action=single&amp;id=6</link>
+            <description>Duis varius, nisl eu tristique cursus, lacus arcu consequat ante, ut semper massa risus in dui. Mauris dapibus varius euismod. Vestibulum et ligula sed erat ultricies semper. Sed tortor mauris,...</description>
+        </item>
+
+    </channel>
+</rss>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+      <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+      <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+   </head>
+   <body>
+      <div data-role="page" id="pageone">
+         <div data-role="header">
+            <h1>Scranton Herald</h1>
+         </div>
+
+         <div data-role="main" class="ui-content">
+            <h2>Electric Imp</h2>
+            <p>
+                Check out the temperature readings from the Electric Imp located
+                in the Scranton Herald offices!
+            </p>
+
+            <div class="chart-container" style="min-height: 50vh;">
+                <canvas id="temperatureChart"></canvas>
+            </div>
+
+            <p><a href="../index.php" rel="external">Click here to return to the main website.</a></p>
+         </div>
+
+         <div data-role="footer">
+            <h1>Copyright &copy; Scranton Herald 2018</h1>
+         </div>
+      </div>
+
+      <script>
+          $(document).ready(function()
+          {
+              $.getJSON('sensordata.php', function(jsondata)
+              {
+                  var internalTemp = [];
+                  var externalTemp = [];
+                  var dates = [];
+
+                  $.each(jsondata, function(i) {
+                      var data = jsondata[i].JsonData;
+                      var obj = $.parseJSON(data);
+
+                      internalTemp.push(parseInt(obj.internal));
+                      externalTemp.push(parseInt(obj.external));
+                      dates.push(jsondata[i].DateTime);
+                  });
+
+                  var ctx = document.getElementById('temperatureChart').getContext('2d');
+                  var chart = new Chart(ctx,
+                  {
+                      // The type of chart we want to create
+                      type: 'line',
+
+                      // The data for our dataset
+                      data:
+                      {
+                          labels: dates,
+                          datasets:
+                          [
+                              {
+                                  label: "Internal temperature",
+                                  backgroundColor: 'rgba(255, 99, 132, 0)',
+                                  borderColor: 'rgb(255, 99, 132)',
+                                  data: internalTemp
+                              },
+                              {
+                                  label: "External temperature",
+                                  backgroundColor: 'rgba(255, 255, 255, 0)',
+                                  borderColor: 'rgb(55, 99, 132)',
+                                  data: externalTemp
+                              },
+                          ]
+                      },
+
+                      // Configuration options go here
+                      options:
+                      {
+                          maintainAspectRatio: false,
+                          responsive: true,
+                          title:
+                          {
+                              display: true,
+                              text: 'Temperature Readings from the Electric Imp'
+                          },
+                          scales:
+                          {
+                              xAxes:
+                              [
+                                  {
+                                      display: true,
+                                      scaleLabel:
+                                      {
+                                          display: true,
+                                          labelString: 'Time'
+                                      }
+                                  }
+                              ],
+                              yAxes:
+                              [
+                                  {
+                                      display: true,
+                                      scaleLabel:
+                                      {
+                                          display: true,
+                                          labelString: 'Temperature (Celcius)'
+                                      }
+                                  }
+                              ]
+                          }
+                      }
+                  });
+              });
+          });
+      </script>
+   </body>
+</html>
