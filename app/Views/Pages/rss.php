@@ -13,10 +13,10 @@
         </div>
 
         <div class="col-lg-8">
-            <h3><?= $feed->channel[0]->title; ?></h3>
-            <h6><?= $feed->channel[0]->description; ?></h6>
+            <h3><?= $feedTitle; ?></h3>
+            <h6><?= $feedDescription; ?></h6>
             <?php
-            foreach ($feed->channel[0]->item as $item)
+            foreach ($items as $item)
             {
             ?>
             <div class="card card-outline-secondary my-3">

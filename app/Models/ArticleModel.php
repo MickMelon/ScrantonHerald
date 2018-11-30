@@ -24,6 +24,9 @@ class ArticleModel
     /**
     * Get all articles between two dates, ordered
     * from new to old.
+    *
+    * @param $dateFrom date from
+    * @param $dateTo date to
     */
     public function getAllArticlesWithinDates($dateFrom, $dateTo)
     {

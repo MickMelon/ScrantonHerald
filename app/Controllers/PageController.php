@@ -20,7 +20,9 @@ class PageController
         $feed = simplexml_load_file($scrantonFeedUrl);
 
         $view = new View('Pages/rss');
-        $view->assign('feed', $feed);
+        $view->assign('feedTitle', $feed->channel[0]->title);
+        $view->assign('feedDescription', $feed->channel[0]->description);
+        $view->assign('items', $feed->channel[0]->item);
         $view->render();
     }
 }

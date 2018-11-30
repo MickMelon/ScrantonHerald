@@ -3,9 +3,25 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="stylesheet" type="text/css" href="public/vendor/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="public/css/site.css" />
 
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="public/vendor/bootstrap/css/bootstrap.min.css" />
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Froala Editor -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.css">
+    <link href='https://cdn.jsdelivr.net/npm/froala-editor@2.9.1/css/froala_editor.min.css' rel='stylesheet' type='text/css' />
+    <link href='https://cdn.jsdelivr.net/npm/froala-editor@2.9.1/css/froala_style.min.css' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" type="text/css" href="public/vendor/froala/css/image.min.css" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Site -->
+    <link rel="stylesheet" type="text/css" href="public/css/site.css" />
+    
     <title><?= SITE_NAME ?><?php if (isset($pageTitle)) echo ' - ' . $pageTitle; ?></title>
 </head>
 <body>

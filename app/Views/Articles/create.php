@@ -31,3 +31,38 @@
         <button type="submit" class="btn btn-primary">Create</button>
     </form>
 </div>
+
+<div class="fr-view">
+    Edited text goes here
+</div>
+
+<script>
+    $(document).ready(function()
+    {
+        $(function() { $('textarea').froalaEditor() });
+
+        $(function() 
+        {
+            $('#content').froalaEditor(
+            {
+                imageUploadURL: 'index.php?controller=article&action=upload_image',
+                imageUploadMethod: 'POST',
+                imageMaxSize: 10 * 1024 * 1024, // 10MB
+                imageAllowedTypes: ['jpeg', 'jpg', 'png']
+            })
+            .on('froalaEditor.image.beforeUpload', function (e, editor, images) {
+                console.log("Before Upload");
+                // Return false if you want to stop the image upload.
+            })
+            .on('froalaEditor.image.uploaded', function (e, editor, response) {
+                console.log("Image was uploaded to the server");
+            })
+            .on('froalaEditor.image.inserted', function (e, editor, $img, response) {
+                console.log("Image was inserted in the editor.");
+            })
+            .on('froalaEditor.image.replaced', function (e, editor, $img, response) {
+                console.log("Image was replaced in the editor.");
+            })
+        });
+    });
+</script>

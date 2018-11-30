@@ -1,6 +1,8 @@
 <?php
 namespace App\Base;
 
+use App\Models\UserModel;
+
 class Util
 {
     public static function isLoggedIn()
@@ -12,7 +14,7 @@ class Util
     {
         if (!Util::isLoggedIn()) return false;
 
-        $usersModel = new UsersModel();
+        $usersModel = new UserModel();
 
         $user = $usersModel->getUserById($_SESSION['id']);
         $user = json_decode($user, true);

@@ -5,11 +5,12 @@ use App\Models\ArticleModel;
 use App\Models\UserModel;
 use App\Base\Util;
 use App\Base\View;
+use FroalaEditor\Image;
 
 class ArticleController
 {
-    private $articlesModel;
-    private $usersModel;
+    private $articleModel;
+    private $userModel;
 
     const ARTICLES_PER_PAGE = 9;
     const DEFAULT_HEADLINE_IMAGE = 'https://via.placeholder.com/250';
@@ -20,8 +21,8 @@ class ArticleController
     */
     public function __construct()
     {
-        $this->articlesModel = new ArticleModel();
-        $this->usersModel = new UserModel();
+        $this->articleModel = new ArticleModel();
+        $this->userModel = new UserModel();
     }
 
     /**
@@ -36,12 +37,12 @@ class ArticleController
             $dateFrom = $_GET['datefrom'];
             $dateTo = $_GET['dateto'];
 
-            $articles = $this->articlesModel->
+            $articles = $this->articleModel->
                 getAllArticlesWithinDates($dateFrom, $dateTo);
         }
         else
         {
-            $articles = $this->articlesModel->getAllArticles();
+            $articles = $this->articleModel->getAllArticles();
         }
 
         $articles = json_decode($articles, true);
@@ -88,7 +89,7 @@ class ArticleController
         else
             header('Location: index.php?controller=pages&action=error');
 
-        $article = $this->articlesModel->getArticle($id);
+        $article = $this->articleModel->getArticle($id);
         $article = json_decode($article, true);
 
         // Get all articles to display in sidebar
@@ -97,10 +98,10 @@ class ArticleController
         $dateFrom = date_sub($today, date_interval_create_from_date_string('1 month'));
         $dateFrom = $dateFrom->format('Y-m-d');
 
-        $allArticles = $this->articlesModel->getAllArticlesWithinDates($dateFrom, $dateTo);
+        $allArticles = $this->articleModel->getAllArticlesWithinDates($dateFrom, $dateTo);
         $allArticles = json_decode($allArticles, true);
 
-        $reporter = $this->usersModel->getUserById($article['ReporterID']);
+        $reporter = $this->userModel->getUserById($article['ReporterID']);
         $reporter = json_decode($reporter, true);
 
         $pageTitle = $article['Headline'];
@@ -136,22 +137,25 @@ class ArticleController
         if (isset($_POST['headline']) &&
             isset($_POST['content']))
         {
+            echo $_POST['content'];
+            
+            
             $headline = filter_var($_POST['headline'], FILTER_SANITIZE_STRING);
             $content = filter_var($_POST['content'], FILTER_SANITIZE_STRING);
             $reporterId = $_SESSION['id'];
 
-            if (file_exists($_FILES['headlineImage']['tmp_name']))
+           if (file_exists($_FILES['headlineImage']['tmp_name']))
                 $headlineImage = $this::uploadFile($_FILES['headlineImage'], 'image');
             else
-                $headlineImage = $this->DEFAULT_HEADLINE_IMAGE;
+                $headlineImage = ArticleController::DEFAULT_HEADLINE_IMAGE;
 
             if (file_exists($_FILES['file']['tmp_name']))
                 $file = $this::uploadFile($_FILES['file'], 'media');
             else
                 $file = '';
 
-            $this->articlesModel->createArticle($headline, $headlineImage, $content, $file, $reporterId);
-            $this->create_success();
+            $this->articleModel->createArticle($headline, $headlineImage, $content, $file, $reporterId);
+           // header('Location: index.php?controller=article&action=create_success');
         }
         else
             header('Location: index.php');
@@ -210,5 +214,19 @@ class ArticleController
     {
         $view = new View('Articles/createsucess');
         $view->render();
+    }
+
+    public function upload_image()
+    {
+        echo $_SERVER['DOCUMENT_ROOT'];
+        try
+        {
+            $response = Image::upload('/uni/public/uploads/images');
+            echo stripslashes(json_encode($response));
+        }
+        catch (Exception $e)
+        {
+            http_response_code(404);
+        }
     }
 }
