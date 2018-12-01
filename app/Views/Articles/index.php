@@ -45,6 +45,7 @@
                                     * Display the article summary if the content
                                     * is less than 200 characters.
                                     */
+                                    $article['Content'] = filter_var($article['Content'], FILTER_SANITIZE_STRING);
                                     if (strlen($article['Content']) < 200)
                                         echo $article['Content'];
                                     else

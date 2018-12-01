@@ -139,9 +139,8 @@ class ArticleController
         {
             echo $_POST['content'];
             
-            
+            $content = $_POST['content'];
             $headline = filter_var($_POST['headline'], FILTER_SANITIZE_STRING);
-            $content = filter_var($_POST['content'], FILTER_SANITIZE_STRING);
             $reporterId = $_SESSION['id'];
 
            if (file_exists($_FILES['headlineImage']['tmp_name']))
