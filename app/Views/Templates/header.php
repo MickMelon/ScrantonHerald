@@ -22,22 +22,22 @@
     <!-- Site -->
     <link rel="stylesheet" type="text/css" href="public/css/site.css" />
     
-    <title><?= SITE_NAME ?><?php if (isset($pageTitle)) echo ' - ' . $pageTitle; ?></title>
+    <title><?= $siteName ?><?php if (isset($pageTitle)) echo ' - ' . $pageTitle; ?></title>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="index.php?controller=article&action=index"><?= SITE_NAME ?></a>
+            <a class="navbar-brand" href="index.php?controller=article&action=index"><?= $siteName ?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item<?php if ($this instanceof ArticleController) echo ' active'; ?>">
+                    <li class="nav-item<?php echo $_GET['controller'] == 'article' ? ' active' : '' ?>">
                         <a class="nav-link" href="index.php?controller=article&action=index">Articles</a>
                     </li>
-                    <li class="nav-item<?php if ($this instanceof EvaluationController) echo ' active'; ?>">
+                    <li class="nav-item<?php echo $_GET['controller'] == 'evaluation' ? ' active' : '' ?>">
                         <a class="nav-link" href="index.php?controller=evaluation&action=index">Evaluations</a>
                     </li>
                     <li class="nav-item">
@@ -57,8 +57,8 @@
         </nav>
         <section class="jumbotron">
             <div class="container">
-                <h1 class="jumbotron-heading"><?= SITE_NAME ?></h1>
-                <p class="lead text-muted"><?= SITE_DESC ?></p>
+                <h1 class="jumbotron-heading"><?= $siteName ?></h1>
+                <p class="lead text-muted"><?= $siteDesc ?></p>
             </div>
         </section>
     </header>

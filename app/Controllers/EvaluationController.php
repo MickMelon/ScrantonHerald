@@ -2,7 +2,7 @@
 namespace App\Controllers;
 
 use App\Models\EvaluationModel;
-use App\Base\View;
+use App\View;
 
 class EvaluationController
 {
@@ -35,10 +35,9 @@ class EvaluationController
         }
 
         $totalEvaluations = $this->evaluationModel->getTotalEvaluations();
-        $pageTitle = 'Evaluations';
 
         $view = new View('Evaluations/index');
-        $view->assign('pageTitle', $pageTitle);
+        $view->assign('pageTitle', 'Evaluations');
         $view->assign('evaluation', $evaluation);
         $view->assign('totalEvaluations', $totalEvaluations);
         $view->assign('week', $week);

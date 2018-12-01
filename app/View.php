@@ -1,7 +1,8 @@
 <?php 
-namespace App\Base;
+namespace App;
 
-use App\Base\Util;
+use App\Util;
+use App\Config;
 
 class View
 {
@@ -11,6 +12,10 @@ class View
     private $data = array();
     private $file = false;
 
+    /**
+     * Create a new view from the specified template name.
+     * e.g. 'Articles/index'
+     */
     public function __construct($template)
     {
         $file = 'app/Views/' . strtolower($template) . '.php';
@@ -19,16 +24,24 @@ class View
             $this->file = $file;
     }
 
+    /**
+     * Add the variables that need to be displayed on the view.
+     */
     public function assign($variable, $value)
     {
         $this->data[$variable] = $value;
     }
 
+    /**
+     * Display the view with the header and footer.
+     */
     public function render()
     {
         $this->assign('loggedIn', Util::isLoggedIn());
-        extract($this->data);
-        
+        $this->assign('siteName', Config::SITE_NAME);
+        $this->assign('siteDesc', Config::SITE_DESC);
+
+        extract($this->data);       
         include(View::HEADER_FILE);
         include($this->file);
         include(View::FOOTER_FILE);

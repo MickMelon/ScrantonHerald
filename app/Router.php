@@ -1,5 +1,5 @@
 <?php
-namespace App\Base;
+namespace App;
 
 use App\Controllers;
 
@@ -7,7 +7,7 @@ class Router
 {
     /**
      * All controllers and their actions are contained in this array.
-    */
+     */
     private $controllers = array(
         'page' => ['error', 'rss'],
         'article' => ['index', 'single', 'create', 'submit_create', 'upload_image'],
@@ -16,29 +16,21 @@ class Router
         'register' => ['index', 'register', 'success'],
         'sensor' => ['store', 'store_test']);
 
+    /**
+     * Gets the specified controller and action and acts on it to 
+     * effectively start the app.
+     */
     public function start()
     {
-        /**
-         * Set the controller and action depending on the parameters
-         * that are set.
-         * e.g. index.php?controller=articles&action=index
-         * would set $controller to articles and $action to index
-        */
-        if (isset($_GET['controller']) && isset($_GET['action']))
-        {
-            $controller = $_GET['controller'];
-            $action = $_GET['action'];
-        }
-        else
-        {
-            $controller = 'article';
-            $action = 'index';
-        }
+        // Set the controller and action depending on the parameters
+        // that are set.
+        // e.g. index.php?controller=articles&action=index
+        // would set $controller to articles and $action to index
+        $controller = isset($_GET['controller']) ? strtolower($_GET['controller']) : 'article';
+        $action = isset($_GET['action']) ? strtolower($_GET['action']) : 'index';
 
-        /**
-        * Check if the specified controller and action are valid then call
-        * it or the error page.
-        */
+        // Check if the specified controller and action are valid then call
+        // it or the error page.
         if (array_key_exists($controller, $this->controllers))
             if (in_array($action, $this->controllers[$controller]))
                 $this->call($controller, $action);
@@ -49,13 +41,11 @@ class Router
     }
 
     /**
-    * Call the specified controller and execute the method corresponding
-    * with the action name.
-    */
-    function call($controller, $action)
+     * Call the specified controller and execute the method corresponding
+     * with the action name.
+     */
+    private function call($controller, $action)
     {
-        //require_once('app/controllers/' . $controller . 'controller.php');
-
         switch ($controller)
         {
             case 'article':
@@ -80,6 +70,11 @@ class Router
 
             case 'sensor':
                 $controller = new Controllers\SensorController();
+                break;
+
+            default:
+                $controller = new Controllers\PageController();
+                $action = 'error';
                 break;
         }
 

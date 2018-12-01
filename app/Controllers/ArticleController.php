@@ -3,8 +3,8 @@ namespace App\Controllers;
 
 use App\Models\ArticleModel;
 use App\Models\UserModel;
-use App\Base\Util;
-use App\Base\View;
+use App\Util;
+use App\View;
 use FroalaEditor\Image;
 
 class ArticleController
@@ -16,9 +16,9 @@ class ArticleController
     const DEFAULT_HEADLINE_IMAGE = 'https://via.placeholder.com/250';
 
     /**
-    * Creates a new ArticlesController object
-    * and instantiate dependencies.
-    */
+     * Creates a new ArticlesController object
+     * and instantiate dependencies.
+     */
     public function __construct()
     {
         $this->articleModel = new ArticleModel();
@@ -26,8 +26,8 @@ class ArticleController
     }
 
     /**
-    * Displays the articles index page.
-    */
+     * Displays the articles index page.
+     */
     public function index()
     {
         // Get all articles within the dates if the date from and date
@@ -41,19 +41,13 @@ class ArticleController
                 getAllArticlesWithinDates($dateFrom, $dateTo);
         }
         else
-        {
             $articles = $this->articleModel->getAllArticles();
-        }
 
         $articles = json_decode($articles, true);
-
-        $pageTitle = 'Articles';
-
-        // Set the variables used in the index view
         $totalArticles = sizeof($articles);
         $page = (isset($_GET['page']) && $_GET['page'] > 0) ? $_GET['page'] : 1;
 
-        // Set the variables used for the pagination
+        // Set the variables used for the pagination.
         $totalPages = ceil($totalArticles / $this::ARTICLES_PER_PAGE);
         $previousPage = ($page - 1) < 1 ? 1 : ($page - 1);
         $nextPage = ($page + 1) > $totalPages ? $totalPages : ($page + 1);
@@ -61,15 +55,17 @@ class ArticleController
         // Set the variables used for "Showing x to y of z"
         $showingTo = ($page * $this::ARTICLES_PER_PAGE);
         $showingFrom = $showingTo - $this::ARTICLES_PER_PAGE + 1;
-        // If showingTo is greater than the number of articles, set it to the
-        // number of articles
+
+        // Make sure showingTo is not greater than the number of articles.
         $showingTo = ($showingTo > $totalArticles) ? $totalArticles : $showingTo;
 
         // Get the subset of articles depending on page and how many to
         // show per page.
         $articles = array_slice($articles, ($page - 1) * $this::ARTICLES_PER_PAGE, $this::ARTICLES_PER_PAGE);
         
+        // Show the view.
         $view = new View('Articles/index');
+        $view->assign('pageTitle', 'Articles');
         $view->assign('articles', $articles);
         $view->assign('totalPages', $totalPages);
         $view->assign('showingTo', $showingTo);
@@ -79,44 +75,41 @@ class ArticleController
     }
 
     /**
-    * Display a single article by the ID specified
-    * in the GET parameter.
-    */
+     * Display a single article by the ID specified
+     * in the GET parameter.
+     */
     public function single()
     {
-        if (isset($_GET['id']))
-            $id = $_GET['id'];
-        else
-            header('Location: index.php?controller=pages&action=error');
+        // Check if the ID has been set.
+        if (isset($_GET['id'])) $id = $_GET['id'];
+        else header('Location: index.php?controller=pages&action=error');
 
+        // Get the specified article and reporter from the database.
         $article = $this->articleModel->getArticle($id);
         $article = json_decode($article, true);
+        $reporter = $this->userModel->getUserById($article['ReporterID']);
+        $reporter = json_decode($reporter, true);
 
-        // Get all articles to display in sidebar
+        // Get all articles to display in sidebar.
         $today = date_create();
         $dateTo = $today->format('Y-m-d');
         $dateFrom = date_sub($today, date_interval_create_from_date_string('1 month'));
         $dateFrom = $dateFrom->format('Y-m-d');
-
         $allArticles = $this->articleModel->getAllArticlesWithinDates($dateFrom, $dateTo);
         $allArticles = json_decode($allArticles, true);
 
-        $reporter = $this->userModel->getUserById($article['ReporterID']);
-        $reporter = json_decode($reporter, true);
-
-        $pageTitle = $article['Headline'];
-
+        // Show the view.
         $view = new View('Articles/single');
-        $view->assign('pageTitle', $pageTitle);
+        $view->assign('pageTitle', $article['Headline']);
         $view->assign('article', $article);
         $view->assign('reporter', $reporter);
         $view->assign('allArticles', $allArticles);
         $view->render();
     }
 
-    /***
-    * Shows the create article page to only reporters.
-    */
+    /**
+     * Shows the create article page to only reporters.
+     */
     public function create()
     {
         if (!Util::isLoggedIn() || !Util::isReporter())
@@ -127,8 +120,8 @@ class ArticleController
     }
 
     /***
-    * Called when the create article form has been submitted.
-    */
+     * Called when the create article form has been submitted.
+     */
     public function submit_create()
     {
         if (!Util::isLoggedIn() || !Util::isReporter())
@@ -158,6 +151,15 @@ class ArticleController
         }
         else
             header('Location: index.php');
+    }
+
+    /**
+     * Display the "article created successfully" view.
+     */
+    public function create_success()
+    {
+        $view = new View('Articles/createsucess');
+        $view->render();
     }
 
     private function uploadFile($file, $type)
@@ -207,12 +209,6 @@ class ArticleController
         }
 
         return '';
-    }
-
-    public function create_success()
-    {
-        $view = new View('Articles/createsucess');
-        $view->render();
     }
 
     public function upload_image()

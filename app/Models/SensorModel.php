@@ -1,11 +1,14 @@
 <?php
 namespace App\Models;
 
-use App\Base\Database;
+use App\Database;
 use PDO;
 
 class SensorModel
 {
+    /**
+     * Saves the sensor data to the database.
+     */
     public function saveData($jsonData)
     {
         $db = Database::getInstance();
@@ -18,6 +21,9 @@ class SensorModel
         $query->execute();
     }
 
+    /**
+     * Gets all the sensor data from the database.
+     */
     public function getAllData()
     {
         $db = Database::getInstance();

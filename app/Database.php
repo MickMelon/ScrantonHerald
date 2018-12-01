@@ -1,5 +1,5 @@
 <?php
-namespace App\Base;
+namespace App;
 
 use PDO;
 
@@ -8,15 +8,16 @@ class Database
     private static $instance = NULL;
 
     /**
-    * The constructor and clone functions are set private
-    * so that they cannot be called from outside the class.
-    */
+     * The constructor and clone functions are set private
+     * so that they cannot be called from outside the class.
+     */
     private function __construct() {}
     private function __clone() {}
 
     /**
-    * Returns the singleton database instance.
-    */
+     * Returns the singleton database instance. If there is none, 
+     * it will create it.
+     */
     public static function getInstance()
     {
         if (!isset(self::$instance))
@@ -26,8 +27,8 @@ class Database
     }
 
     /**
-    * Configure and set the singleton database instance.
-    */
+     * Configure and set the singleton database instance.
+     */
     private static function setInstance()
     {
         $pdo_options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
@@ -35,9 +36,10 @@ class Database
         try
         {
             self::$instance = new PDO(
-                'mysql:host=' . DB_SERVER .';dbname=' . DB_NAME,
-                DB_USER,
-                DB_PASS,
+                'mysql:host=' . Config::DB_SERVER .
+                ';dbname=' . Config::DB_NAME,
+                Config::DB_USER,
+                Config::DB_PASS,
                 $pdo_options);
         }
         catch (Exception $ex)

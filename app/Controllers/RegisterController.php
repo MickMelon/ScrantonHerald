@@ -2,8 +2,9 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use App\Base\View;
-use App\Base\Util;
+use App\View;
+use App\Util;
+use App\Config;
 
 class RegisterController
 {
@@ -26,6 +27,7 @@ class RegisterController
         if (Util::isLoggedIn()) header('Location: index.php');
 
         $view = new View('Register/index');
+        $view->assign('pageTitle', 'Register');
         $view->assign('errors', $errors);
         $view->render();
     }
@@ -43,10 +45,14 @@ class RegisterController
             isset($_POST['password']) &&
             isset($_POST['g-recaptcha-response']))
         {
-            $googleCaptchaSecret = "6LfG23UUAAAAAIFz-cZ97KjwmUQ3qWTMJ1GvQdJg";
-            $verifyCaptchaResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . $googleCaptchaSecret . '&response=' . $_POST['g-recaptcha-response']);
+            // Check if the captcha was submitted correctly.
+            $verifyCaptchaResponse = file_get_contents(
+                'https://www.google.com/recaptcha/api/siteverify?secret=' .
+                Config::GOOGLE_CAPTCHA_KEY . '&response=' .
+                $_POST['g-recaptcha-response']);
             $captchaResponseData = json_decode($verifyCaptchaResponse);
 
+            // Only if the captcha is correct, attempt to login.
             if ($captchaResponseData->success)
             {
                 $firstName = filter_var($_POST['firstName'], FILTER_SANITIZE_STRING);
@@ -81,6 +87,7 @@ class RegisterController
     public function success()
     {
         $view = new View('Register/registersuccess');
+        $view->assign('pageTitle', 'Success');
         $view->render();
     }
 }

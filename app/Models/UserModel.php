@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-use App\Base\Database;
+use App\Database;
 use PDO;
 
 class UserModel

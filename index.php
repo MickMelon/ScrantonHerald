@@ -9,12 +9,15 @@ session_start();
 
 require_once('vendor/autoload.php');
 
-use App\Base\Config;
-use App\Base\Router;
-use App\Base\Util;
+use App\Config;
+use App\Router;
+use App\Util;
 
-$config = new Config();
-$config->init();
+if (Config::DISPLAY_ERRORS)
+{
+    error_reporting(E_ALL);
+    ini_set("display_errors", 1);
+}
 
 $router = new Router();
 $router->start();

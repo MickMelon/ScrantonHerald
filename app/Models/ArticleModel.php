@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-use App\Base\Database;
+use App\Database;
 use PDO;
 
 class ArticleModel
@@ -24,9 +24,6 @@ class ArticleModel
     /**
     * Get all articles between two dates, ordered
     * from new to old.
-    *
-    * @param $dateFrom date from
-    * @param $dateTo date to
     */
     public function getAllArticlesWithinDates($dateFrom, $dateTo)
     {
@@ -57,6 +54,9 @@ class ArticleModel
         return json_encode($query->fetch());
     }
 
+    /**
+     * Create a new article.
+     */
     public function createArticle($headline, $headlineImage, $content, $file, $reporterId)
     {
         $dateTime = date("Y-m-d H:i:s");

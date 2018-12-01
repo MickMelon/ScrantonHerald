@@ -14,26 +14,28 @@ class SensorController
         $this->sensorModel = new SensorModel();
     }
 
+    /**
+     * Receives and stores the data sent from the 
+     * electric imp.
+     */
     public function store()
     {
-        $this->sensorModel->saveData("here");
         // Get the json data from the electric imp
         $jsonbody = file_get_contents('php://input');
-        //file_put_contents("test.txt", "someone tried to send something");
+
         // Decode the json so we can see if the device id is ours
         $json = json_decode($jsonbody, false);
 
-        //file_put_contents("test.txt", $json['device']);
         if ($json[0]['device'] != SensorController::DEVICE_ID)
-        {
-            $this->sensorModel->saveData("test");
             return;
-        }
-
 
         $this->sensorModel->saveData($jsonbody);
     }
 
+    /**
+     * This function simulates sending the data from the 
+     * electric imp server.
+     */
     public function store_test()
     {
         $post_data = array('device' => '233dce4dead3dbee',
@@ -54,7 +56,5 @@ class SensorController
         );
 
         $response = curl_exec( $ch );
-
-        echo 'hey';
     }
 }

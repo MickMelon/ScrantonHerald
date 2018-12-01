@@ -2,8 +2,8 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use App\Base\View;
-use App\Base\Util;
+use App\View;
+use App\Util;
 
 class LoginController
 {
@@ -26,6 +26,7 @@ class LoginController
         if (Util::isLoggedIn()) header('Location: index.php');
 
         $view = new View('Login/index');
+        $view->assign('pageTitle', 'Login');
         $view->assign('errors', $errors);
         $view->render();
     }
@@ -65,6 +66,7 @@ class LoginController
     public function success()
     {
         $view = new View('Login/loginsuccess');
+        $view->assign('pageTitle', 'Success');
         $view->render();
     }
 
