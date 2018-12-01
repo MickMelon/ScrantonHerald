@@ -8,12 +8,13 @@ class Router
     /**
      * All controllers and their actions are contained in this array.
     */
-    private $controllers = array('page' => ['error', 'rss'],
-                         'article' => ['index', 'single', 'create', 'submit_create', 'upload_image'],
-                         'evaluation' => ['index'],
-                         'login' => ['index', 'login', 'logout', 'success'],
-                         'register' => ['index', 'register', 'success'],
-                         'sensor' => ['store', 'store_test']);
+    private $controllers = array(
+        'page' => ['error', 'rss'],
+        'article' => ['index', 'single', 'create', 'submit_create', 'upload_image'],
+        'evaluation' => ['index'],
+        'login' => ['index', 'login', 'logout', 'success'],
+        'register' => ['index', 'register', 'success'],
+        'sensor' => ['store', 'store_test']);
 
     public function start()
     {
