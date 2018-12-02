@@ -5,7 +5,7 @@ use App\Models\ArticleModel;
 use App\Models\UserModel;
 use App\Util;
 use App\View;
-use FroalaEditor\Image;
+use App\FileUpload;
 
 class ArticleController
 {
@@ -129,24 +129,48 @@ class ArticleController
         if (isset($_POST['headline']) &&
             isset($_POST['content']))
         {
-            echo $_POST['content'];
-
             $content = $_POST['content'];
             $headline = filter_var($_POST['headline'], FILTER_SANITIZE_STRING);
             $reporterId = $_SESSION['id'];
 
+            // Check if there is a headline image to be uploaded.
             if (file_exists($_FILES['headlineImage']['tmp_name']))
-                $headlineImage = $this::uploadFile($_FILES['headlineImage'], 'image');
+            {
+                $imageUpload = new FileUpload($_FILES['headlineImage'], true);
+                $result = $imageUpload->upload();
+                if (!is_array($result)) 
+                    $headlineImage = $result;
+                else 
+                {
+                    foreach ($result as $error)
+                        echo $result . '<br>';
+                    return;
+                }
+
+            }
             else
                 $headlineImage = ArticleController::DEFAULT_HEADLINE_IMAGE;
 
+            // Check if there is a file to be uploaded.
             if (file_exists($_FILES['file']['tmp_name']))
-                $file = $this::uploadFile($_FILES['file'], 'media');
+            {
+                $fileUpload = new FileUpload($_FILES['file']);
+                $result = $fileUpload->upload();
+                if (!is_array($result))
+                    $file = $result;
+                    else 
+                    {
+                        foreach ($result as $error)
+                            echo $result . '<br>';
+                        return;
+                    }
+            }
             else
                 $file = '';
 
+            // Create the article and display the success page.
             $this->articleModel->createArticle($headline, $headlineImage, $content, $file, $reporterId);
-            // header('Location: index.php?controller=article&action=create_success');
+            header('Location: index.php?controller=article&action=create_success');
         }
         else
             header('Location: index.php');
@@ -157,7 +181,7 @@ class ArticleController
      */
     public function create_success()
     {
-        $view = new View('Articles/createsucess');
+        $view = new View('Articles/success');
         $view->render();
     }
 
@@ -212,11 +236,10 @@ class ArticleController
 
     public function upload_image()
     {
-        echo $_SERVER['DOCUMENT_ROOT'];
         try
         {
-            $response = Image::upload('/uni/public/uploads/images');
-            echo stripslashes(json_encode($response));
+            $response = Image::upload('uni/public/uploads/images/');
+            echo "TEST!! " . stripslashes(json_encode($response));
         }
         catch (Exception $e)
         {

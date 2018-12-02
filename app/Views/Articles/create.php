@@ -45,9 +45,9 @@
         {
             $('#content').froalaEditor(
             {
-                imageUploadURL: 'index.php?controller=article&action=upload_image',
+                imageUploadURL: './uni/app/Views/Articles/upload_image.php',
                 imageUploadMethod: 'POST',
-                imageMaxSize: 10 * 1024 * 1024, // 10MB
+                imageMaxSize: 100 * 1024 * 1024, // 10MB
                 imageAllowedTypes: ['jpeg', 'jpg', 'png']
             })
             .on('froalaEditor.image.beforeUpload', function (e, editor, images) {
