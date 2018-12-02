@@ -47,12 +47,11 @@ class ArticleController
         $totalArticles = sizeof($articles);
         $page = (isset($_GET['page']) && $_GET['page'] > 0) ? $_GET['page'] : 1;
 
-        // Set the variables used for the pagination.
+        // Set the variables used for the pagination. 
+        // (showing x to y of z)
         $totalPages = ceil($totalArticles / $this::ARTICLES_PER_PAGE);
         $previousPage = ($page - 1) < 1 ? 1 : ($page - 1);
         $nextPage = ($page + 1) > $totalPages ? $totalPages : ($page + 1);
-
-        // Set the variables used for "Showing x to y of z"
         $showingTo = ($page * $this::ARTICLES_PER_PAGE);
         $showingFrom = $showingTo - $this::ARTICLES_PER_PAGE + 1;
 
@@ -131,12 +130,12 @@ class ArticleController
             isset($_POST['content']))
         {
             echo $_POST['content'];
-            
+
             $content = $_POST['content'];
             $headline = filter_var($_POST['headline'], FILTER_SANITIZE_STRING);
             $reporterId = $_SESSION['id'];
 
-           if (file_exists($_FILES['headlineImage']['tmp_name']))
+            if (file_exists($_FILES['headlineImage']['tmp_name']))
                 $headlineImage = $this::uploadFile($_FILES['headlineImage'], 'image');
             else
                 $headlineImage = ArticleController::DEFAULT_HEADLINE_IMAGE;
@@ -147,7 +146,7 @@ class ArticleController
                 $file = '';
 
             $this->articleModel->createArticle($headline, $headlineImage, $content, $file, $reporterId);
-           // header('Location: index.php?controller=article&action=create_success');
+            // header('Location: index.php?controller=article&action=create_success');
         }
         else
             header('Location: index.php');
