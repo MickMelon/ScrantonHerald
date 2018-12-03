@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Models\ArticleModel;
 use App\Models\UserModel;
+use App\Models\CommentModel;
 use App\Util;
 use App\View;
 use App\FileUpload;
@@ -11,6 +12,7 @@ class ArticleController
 {
     private $articleModel;
     private $userModel;
+    private $commentModel;
 
     const ARTICLES_PER_PAGE = 9;
     const DEFAULT_HEADLINE_IMAGE = 'https://via.placeholder.com/250';
@@ -23,6 +25,7 @@ class ArticleController
     {
         $this->articleModel = new ArticleModel();
         $this->userModel = new UserModel();
+        $this->commentModel = new CommentModel();
     }
 
     /**
@@ -92,20 +95,16 @@ class ArticleController
         $reporter = $this->userModel->getUserById($article['ReporterID']);
         $reporter = json_decode($reporter, true);
 
-        // Get all articles to display in sidebar.
-        $today = date_create();
-        $dateTo = $today->format('Y-m-d');
-        $dateFrom = date_sub($today, date_interval_create_from_date_string('1 month'));
-        $dateFrom = $dateFrom->format('Y-m-d');
-        $allArticles = $this->articleModel->getAllArticlesWithinDates($dateFrom, $dateTo);
-        $allArticles = json_decode($allArticles, true);
-
+        // Get all the comments to display... 
+        $comments = $this->commentModel->getAllCommentsForArticle($id);
+        $comments = json_decode($comments, true);
+            
         // Show the view.
         $view = new View('Articles/single');
         $view->assign('pageTitle', $article['Headline']);
         $view->assign('article', $article);
         $view->assign('reporter', $reporter);
-        $view->assign('allArticles', $allArticles);
+        $view->assign('comments', $comments);
         $view->render();
     }
 
@@ -162,12 +161,12 @@ class ArticleController
                 $result = $fileUpload->upload();
                 if (!is_array($result))
                     $file = $result;
-                    else 
-                    {
-                        foreach ($result as $error)
-                            echo $result . '<br>';
-                        return;
-                    }
+                else 
+                {
+                    foreach ($result as $error)
+                        echo $result . '<br>';
+                    return;
+                }
             }
             else
                 $file = '';

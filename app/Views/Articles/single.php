@@ -10,23 +10,40 @@
             <hr />
             <p><?= $article['Content'] ?></p>
             <hr />
+            <?php 
+            foreach ($comments as $comment)
+            {
+            ?>
+                <ol>
+                    <li><b><?= $comment['ID'] ?></b></li>
+                    <li><?= $comment['Content'] ?></li>
+                    <li><?= $comment['DateTime'] ?></li>
+                    <li><?= $comment['UserID'] ?></li>
+                    <li><?= $comment['ArticleID'] ?></li>
+                    <li><?= $comment['ParentCommentID'] ?></li>
+                
+
+                <?php
+                foreach ($comment['children'] as $child)
+                {
+                ?>
+                    <ul>
+                        <li><?= $child['ID'] ?></li>
+                        <li><?= $child['Content'] ?></li>
+                        <li><?= $child['DateTime'] ?></li>
+                        <li><?= $child['UserID'] ?></li>
+                        <li><?= $child['ArticleID'] ?></li>
+                        <li><?= $child['ParentCommentID'] ?></li>
+                    </ul>
+                    <hr />
+                <?php 
+                } ?>
+                </ol>
+                <hr />
+            <?php 
+            } ?>
         </div>
 
-        <div class="col-md-4">
-            <div class="card my-4">
-                <h5 class="card-header">Latest Articles</h5>
-                <div class="card-body">
-                    <p>Displaying all the articles from the last month:</p>
-                    <ul class="list-unstyled mb-0">
-                        <?php foreach ($allArticles as $a) { ?>
-                        <hr />
-                        <li>
-                            <a href="index.php?controller=article&action=single&id=<?= $a['ID'] ?>"><?= $a['Headline'] ?></a>
-                        </li>
-                        <?php } ?>
-                    </ul>
-                </div>
-            </div>
         </div>
     </div>
 </div>
