@@ -7,6 +7,7 @@ use App\Models\CommentModel;
 use App\Util;
 use App\View;
 use App\FileUpload;
+use App\DateHelper;
 
 class ArticleController
 {
@@ -92,6 +93,10 @@ class ArticleController
         // Get the specified article and reporter from the database.
         $article = $this->articleModel->getArticle($id);
         $article = json_decode($article, true);
+
+        $path_info = pathinfo($article['FileUrl']);
+        $fileIsAudio = $path_info['extension'] == 'mp3' ? true : false;
+
         $reporter = $this->userModel->getUserById($article['ReporterID']);
         $reporter = json_decode($reporter, true);
 
@@ -105,6 +110,7 @@ class ArticleController
         $view->assign('article', $article);
         $view->assign('reporter', $reporter);
         $view->assign('comments', $comments);
+        $view->assign('fileIsAudio', $fileIsAudio);
         $view->render();
     }
 

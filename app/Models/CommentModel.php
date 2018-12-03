@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use App\Database;
+use App\DateHelper;
 use PDO;
 
 class CommentModel 
@@ -14,14 +15,19 @@ class CommentModel
         // Add all child comments to the comments
         foreach ($comments as &$comment)
         {
+            $comment['DaysAgo'] = DateHelper::getDaysSince($comment['DateTime']);
             array_push($comment, 'children');
-            $comment['children'] = array();
-            
+            $comment['Children'] = array();                     
             $childComments = $this->getAllCommentsForComment($comment['ID']);
             $childComments = json_decode($childComments, true);
 
             if (count($childComments) > 0)
-                $comment['children'] = $childComments;
+            {
+                foreach ($childComments as &$cc)
+                    $cc['DaysAgo'] = DateHelper::getDaysSince($cc['DateTime']);
+                $comment['Children'] = $childComments;
+            }
+                
         }
 
         return json_encode($comments);
@@ -34,7 +40,7 @@ class CommentModel
         $sql = "SELECT * FROM `Comment` " .
             "WHERE `ArticleID` = :articleID " .
             "AND `ParentCommentId` IS NULL " .
-            "ORDER BY `DateTime` DESC";
+            "ORDER BY `DateTime` ASC";
         $query = $db->prepare($sql);
         $query->bindParam(':articleID', $articleId, PDO::PARAM_INT);
         $query->execute();
@@ -48,7 +54,7 @@ class CommentModel
 
         $sql = "SELECT * FROM `Comment` " .
             "WHERE `ParentCommentId` = :commentId " .
-            "ORDER BY `DateTime` DESC";
+            "ORDER BY `DateTime` ASC";
         $query = $db->prepare($sql);
         $query->bindParam(':commentId', $commentId, PDO::PARAM_INT);
         $query->execute();
