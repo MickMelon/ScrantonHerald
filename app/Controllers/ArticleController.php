@@ -188,6 +188,72 @@ class ArticleController
         $view->render();
     }
 
+    public function reply()
+    {
+        if (!Util::isLoggedIn())
+            header('Location: index.php');
+
+        if (isset($_GET['article']))
+        {
+            $articleId = $_GET['article'];
+            $commentId = -1;
+
+            $article = json_decode($this->articleModel->getArticle($articleId), true);
+
+            if ($article != null)
+            {
+                if (isset($_GET['comment']))
+                {
+                    $commentId = $_GET['comment'];
+                    $comment = json_decode($this->commentModel->getComment($commentId), true);
+
+                    if ($comment != null)
+                        $replyingTo = $comment['Content'] . ' by ' . $comment['UserID'];
+                    else 
+                        header('Location: index.php?controller=page&action=error');
+                }
+                else 
+                    $replyingTo = $article['Headline'] . ' by ' . $article['ReporterID'];
+
+            }
+            else 
+                header('Location: index.php?controller=page&action=error');
+        }
+        else 
+            header('Location: index.php');
+
+        $view = new View('Articles/reply');
+        $view->assign('articleId', $articleId);
+        $view->assign('commentId', $commentId);
+        $view->assign('replyingTo', $replyingTo);
+        $view->render();
+    }
+
+    public function submit_reply()
+    {
+        if (!Util::isLoggedIn())
+            header('Location: index.php');
+
+        if (isset($_POST['articleId'])
+            && isset($_POST['commentId'])
+            && isset($_POST['content']))
+        {
+            $articleId = $_POST['articleId'];
+            $commentId = $_POST['commentId'];
+            $content = $_POST['content'];
+
+            // Make sure the article exists
+            $article = $this->articleModel->getArticle($articleId);
+            if ($article == null) return;
+            if ($commentId == -1) $commentId = null;
+            $userId = $_SESSION['id'];
+
+            $this->commentModel->createComment($articleId, $commentId, $userId, $content);
+        }
+        else 
+            header('Location: index.php');
+    }
+
     /**
      * Used for the Froala Editor to upload images.
      */
