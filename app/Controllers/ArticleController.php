@@ -94,8 +94,13 @@ class ArticleController
         $article = $this->articleModel->getArticle($id);
         $article = json_decode($article, true);
 
-        $path_info = pathinfo($article['FileUrl']);
-        $fileIsAudio = $path_info['extension'] == 'mp3' ? true : false;
+        if ($article['FileUrl'] != '')
+        {
+            $path_info = pathinfo($article['FileUrl']);
+            $fileIsAudio = $path_info['extension'] == 'mp3' ? true : false;
+        }
+        else
+            $fileIsAudio = false;
 
         $reporter = $this->userModel->getUserById($article['ReporterID']);
         $reporter = json_decode($reporter, true);

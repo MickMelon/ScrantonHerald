@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
             <h1 class="mt-4"><?= $article['Headline'] ?></h1>
-            <p class="lead">Posted by <?= $reporter['FirstName'] ?> <?= $reporter['LastName'] ?> on <?= date_format(date_create($article['DateTime']), 'jS \of F Y') ?></p>
+            <p class="lead">Posted by <b><?= $reporter['FirstName'] ?> <?= $reporter['LastName'] ?></b> on the <b><?= date_format(date_create($article['DateTime']), 'jS \of F, Y') ?></b></p>
             <img class="img-fluid rounded mx-auto" src="<?= $article['HeadlineImageUrl'] ?>" alt="">
             <hr />
             <?php if ($article['FileUrl'] != '') { ?>
