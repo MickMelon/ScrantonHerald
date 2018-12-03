@@ -3,14 +3,17 @@ namespace App\Controllers;
 
 use App\Models\ArticleModel;
 use App\Models\UserModel;
+use App\Models\CommentModel;
 use App\Util;
 use App\View;
-use FroalaEditor\Image;
+use App\FileUpload;
+use App\DateHelper;
 
 class ArticleController
 {
     private $articleModel;
     private $userModel;
+    private $commentModel;
 
     const ARTICLES_PER_PAGE = 9;
     const DEFAULT_HEADLINE_IMAGE = 'https://via.placeholder.com/250';
@@ -23,6 +26,7 @@ class ArticleController
     {
         $this->articleModel = new ArticleModel();
         $this->userModel = new UserModel();
+        $this->commentModel = new CommentModel();
     }
 
     /**
@@ -67,6 +71,9 @@ class ArticleController
         $view->assign('pageTitle', 'Articles');
         $view->assign('articles', $articles);
         $view->assign('totalPages', $totalPages);
+        $view->assign('previousPage', $previousPage);
+        $view->assign('page', $page);
+        $view->assign('nextPage', $nextPage);
         $view->assign('showingTo', $showingTo);
         $view->assign('showingFrom', $showingFrom);
         $view->assign('totalArticles', $totalArticles);
@@ -86,23 +93,29 @@ class ArticleController
         // Get the specified article and reporter from the database.
         $article = $this->articleModel->getArticle($id);
         $article = json_decode($article, true);
+
+        if ($article['FileUrl'] != '')
+        {
+            $path_info = pathinfo($article['FileUrl']);
+            $fileIsAudio = $path_info['extension'] == 'mp3' ? true : false;
+        }
+        else
+            $fileIsAudio = false;
+
         $reporter = $this->userModel->getUserById($article['ReporterID']);
         $reporter = json_decode($reporter, true);
 
-        // Get all articles to display in sidebar.
-        $today = date_create();
-        $dateTo = $today->format('Y-m-d');
-        $dateFrom = date_sub($today, date_interval_create_from_date_string('1 month'));
-        $dateFrom = $dateFrom->format('Y-m-d');
-        $allArticles = $this->articleModel->getAllArticlesWithinDates($dateFrom, $dateTo);
-        $allArticles = json_decode($allArticles, true);
-
+        // Get all the comments to display... 
+        $comments = $this->commentModel->getAllCommentsForArticle($id);
+        $comments = json_decode($comments, true);
+            
         // Show the view.
         $view = new View('Articles/single');
         $view->assign('pageTitle', $article['Headline']);
         $view->assign('article', $article);
         $view->assign('reporter', $reporter);
-        $view->assign('allArticles', $allArticles);
+        $view->assign('comments', $comments);
+        $view->assign('fileIsAudio', $fileIsAudio);
         $view->render();
     }
 
@@ -129,24 +142,49 @@ class ArticleController
         if (isset($_POST['headline']) &&
             isset($_POST['content']))
         {
-            echo $_POST['content'];
-
             $content = $_POST['content'];
             $headline = filter_var($_POST['headline'], FILTER_SANITIZE_STRING);
             $reporterId = $_SESSION['id'];
 
+            // Check if there is a headline image to be uploaded.
             if (file_exists($_FILES['headlineImage']['tmp_name']))
-                $headlineImage = $this::uploadFile($_FILES['headlineImage'], 'image');
+            {
+                $imageUpload = new FileUpload($_FILES['headlineImage'], true);
+                $result = $imageUpload->upload();
+                if (!is_array($result)) 
+                    $headlineImage = $result;
+                else 
+                {
+                    foreach ($result as $error)
+                        echo $result . '<br>';
+                    return;
+                }
+
+            }
             else
                 $headlineImage = ArticleController::DEFAULT_HEADLINE_IMAGE;
 
-            if (file_exists($_FILES['file']['tmp_name']))
-                $file = $this::uploadFile($_FILES['file'], 'media');
+            // Check if there is a file to be uploaded.
+            if (file_exists($_FILES['fileUpload']['tmp_name']))
+            {
+                echo "In file upload...<br>";
+                $fileUpload = new FileUpload($_FILES['fileUpload']);
+                $result = $fileUpload->upload();
+                if (!is_array($result))
+                    $file = $result;
+                else 
+                {
+                    foreach ($result as $error)
+                        echo $result . '<br>';
+                    return;
+                }
+            }
             else
                 $file = '';
 
+            // Create the article and display the success page.
             $this->articleModel->createArticle($headline, $headlineImage, $content, $file, $reporterId);
-            // header('Location: index.php?controller=article&action=create_success');
+            header('Location: index.php?controller=article&action=create_success');
         }
         else
             header('Location: index.php');
@@ -157,70 +195,95 @@ class ArticleController
      */
     public function create_success()
     {
-        $view = new View('Articles/createsucess');
+        $view = new View('Articles/createsuccess');
         $view->render();
     }
 
-    private function uploadFile($file, $type)
+    public function reply()
     {
-        if ($file)
+        if (!Util::isLoggedIn())
+            header('Location: index.php');
+
+        if (isset($_GET['article']))
         {
-            $errors = array();
+            $articleId = $_GET['article'];
+            $commentId = -1;
 
-            $fileName = $file['name'];
-            $fileSize = $file['size'];
-            $fileTmp = $file['tmp_name'];
-            $fileType = $file['type'];
+            $article = json_decode($this->articleModel->getArticle($articleId), true);
 
-            $value = explode('.', $fileName);
-            $fileExt = strtolower(end($value));
-
-            switch ($type)
+            if ($article != null)
             {
-                case 'image':
-                    $allowedExtensions = array('png', 'gif', 'jpg');
-                    $uploadDirectory = 'public/uploads/images/';
-                    break;
+                if (isset($_GET['comment']))
+                {
+                    $commentId = $_GET['comment'];
+                    $comment = json_decode($this->commentModel->getComment($commentId), true);
 
-                case 'media':
-                    $allowedExtensions = array('mp3', 'mp4');
-                    $uploadDirectory = 'public/uploads/files/';
-                    break;
+                    if ($comment != null)
+                        $replyingTo = $comment['Content'] . ' by ' . $comment['UserID'];
+                    else 
+                        header('Location: index.php?controller=page&action=error');
+                }
+                else 
+                    $replyingTo = $article['Headline'] . ' by ' . $article['ReporterID'];
+
             }
-
-            if (!in_array($fileExt, $allowedExtensions))
-                $errors[] = 'Extension not allowed.';
-
-            if ($fileSize > 20097152)
-                $errors[] = 'File size must be no bigger than 20MB.';
-
-            if (empty($errors))
-            {
-                $targetFile = $uploadDirectory . $fileName;
-
-                if (!file_exists($targetFile))
-                    move_uploaded_file($fileTmp, $targetFile);
-
-                return $targetFile;
-            }
-            else
-                print_r($errors);
+            else 
+                header('Location: index.php?controller=page&action=error');
         }
+        else 
+            header('Location: index.php');
 
-        return '';
+        $view = new View('Articles/reply');
+        $view->assign('articleId', $articleId);
+        $view->assign('commentId', $commentId);
+        $view->assign('replyingTo', $replyingTo);
+        $view->render();
     }
 
-    public function upload_image()
+    public function submit_reply()
     {
-        echo $_SERVER['DOCUMENT_ROOT'];
-        try
+        if (!Util::isLoggedIn())
+            header('Location: index.php');
+
+        if (isset($_POST['articleId'])
+            && isset($_POST['commentId'])
+            && isset($_POST['content']))
         {
-            $response = Image::upload('/uni/public/uploads/images');
-            echo stripslashes(json_encode($response));
+            $articleId = $_POST['articleId'];
+            $commentId = $_POST['commentId'];
+            $content = $_POST['content'];
+
+            // Make sure the article exists
+            $article = $this->articleModel->getArticle($articleId);
+            if ($article == null) return;
+            if ($commentId == -1) $commentId = null;
+            $userId = $_SESSION['id'];
+
+            $this->commentModel->createComment($articleId, $commentId, $userId, $content);
         }
-        catch (Exception $e)
+        else 
+            header('Location: index.php');
+    }
+
+    /**
+     * Used for the Froala Editor to upload images.
+     */
+    public function upload_froala_image()
+    {
+        if (!file_exists($_FILES['file']['tmp_name']))
+            return;
+
+        $upload = new FileUpload($_FILES['file'], 'image');
+        $result = $upload->upload();
+
+        if (!is_array($result))
         {
-            http_response_code(404);
+            $response = new \StdClass;
+            $response->link = 'http://localhost:8080/uni/' . $result;
+            $json = json_encode($response, JSON_UNESCAPED_SLASHES);
+
+            header('Content-Type: application/json');
+            echo stripslashes($json);
         }
     }
 }

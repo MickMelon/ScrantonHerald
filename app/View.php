@@ -6,8 +6,8 @@ use App\Config;
 
 class View
 {
-    const HEADER_FILE = 'app/Views/templates/header.php';
-    const FOOTER_FILE = 'app/Views/templates/footer.php';
+    const HEADER_FILE = 'app/Views/Templates/header.php';
+    const FOOTER_FILE = 'app/Views/Templates/footer.php';
 
     private $data = array();
     private $file = false;
@@ -18,10 +18,12 @@ class View
      */
     public function __construct($template)
     {
-        $file = 'app/Views/' . strtolower($template) . '.php';
-
+        $file = 'app/Views/' . $template . '.php';
+        
         if (file_exists($file)) 
             $this->file = $file;
+        else 
+            $this->file = 'app/Views/Pages/error.php';
     }
 
     /**
