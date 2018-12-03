@@ -67,6 +67,9 @@ class ArticleController
         $view->assign('pageTitle', 'Articles');
         $view->assign('articles', $articles);
         $view->assign('totalPages', $totalPages);
+        $view->assign('previousPage', $previousPage);
+        $view->assign('page', $page);
+        $view->assign('nextPage', $nextPage);
         $view->assign('showingTo', $showingTo);
         $view->assign('showingFrom', $showingFrom);
         $view->assign('totalArticles', $totalArticles);
@@ -152,9 +155,10 @@ class ArticleController
                 $headlineImage = ArticleController::DEFAULT_HEADLINE_IMAGE;
 
             // Check if there is a file to be uploaded.
-            if (file_exists($_FILES['file']['tmp_name']))
+            if (file_exists($_FILES['fileUpload']['tmp_name']))
             {
-                $fileUpload = new FileUpload($_FILES['file']);
+                echo "In file upload...<br>";
+                $fileUpload = new FileUpload($_FILES['fileUpload']);
                 $result = $fileUpload->upload();
                 if (!is_array($result))
                     $file = $result;
@@ -181,69 +185,29 @@ class ArticleController
      */
     public function create_success()
     {
-        $view = new View('Articles/success');
+        $view = new View('Articles/createsuccess');
         $view->render();
     }
 
-    private function uploadFile($file, $type)
+    /**
+     * Used for the Froala Editor to upload images.
+     */
+    public function upload_froala_image()
     {
-        if ($file)
+        if (!file_exists($_FILES['file']['tmp_name']))
+            return;
+
+        $upload = new FileUpload($_FILES['file'], 'image');
+        $result = $upload->upload();
+
+        if (!is_array($result))
         {
-            $errors = array();
+            $response = new \StdClass;
+            $response->link = 'http://localhost:8080/uni/' . $result;
+            $json = json_encode($response, JSON_UNESCAPED_SLASHES);
 
-            $fileName = $file['name'];
-            $fileSize = $file['size'];
-            $fileTmp = $file['tmp_name'];
-            $fileType = $file['type'];
-
-            $value = explode('.', $fileName);
-            $fileExt = strtolower(end($value));
-
-            switch ($type)
-            {
-                case 'image':
-                    $allowedExtensions = array('png', 'gif', 'jpg');
-                    $uploadDirectory = 'public/uploads/images/';
-                    break;
-
-                case 'media':
-                    $allowedExtensions = array('mp3', 'mp4');
-                    $uploadDirectory = 'public/uploads/files/';
-                    break;
-            }
-
-            if (!in_array($fileExt, $allowedExtensions))
-                $errors[] = 'Extension not allowed.';
-
-            if ($fileSize > 20097152)
-                $errors[] = 'File size must be no bigger than 20MB.';
-
-            if (empty($errors))
-            {
-                $targetFile = $uploadDirectory . $fileName;
-
-                if (!file_exists($targetFile))
-                    move_uploaded_file($fileTmp, $targetFile);
-
-                return $targetFile;
-            }
-            else
-                print_r($errors);
-        }
-
-        return '';
-    }
-
-    public function upload_image()
-    {
-        try
-        {
-            $response = Image::upload('uni/public/uploads/images/');
-            echo "TEST!! " . stripslashes(json_encode($response));
-        }
-        catch (Exception $e)
-        {
-            http_response_code(404);
+            header('Content-Type: application/json');
+            echo stripslashes($json);
         }
     }
 }

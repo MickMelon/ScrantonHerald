@@ -9,10 +9,11 @@
         </div>
         <div class="form-group">
             <label for="headlineImage">Headline Image</label>
-            <input type="file" class="form-control" id="headlineImage" name="headlineImage" placeholder="Enter headline image URL" />
-            <div id="headlineImageFeedback" class="invalid-feedback" style="display:none;">
-              Headline image URL must be between 3 and 255 characters in length.
-            </div>
+            <input type="file" class="form-control" id="headlineImage" name="headlineImage" />
+        </div>
+        <div class="form-group">
+            <label for="file">File</label>
+            <input type="file" class="form-control" id="fileUpload" name="fileUpload"/>
         </div>
         <div class="form-group">
             <label for="content">Content*</label>
@@ -21,48 +22,37 @@
               Content must be between 3 and 63206 characters in length.
             </div>
         </div>
-        <div class="form-group">
-            <label for="file">File</label>
-            <input type="file" class="form-control" id="file" name="file"/>
-            <div id="fileFeedback" class="invalid-feedback" style="display:none;">
-              Last name must be between 2 and 35 characters in length.
-            </div>
-        </div>
         <button type="submit" class="btn btn-primary">Create</button>
     </form>
+
+    <hr />
+    <h3>Live Preview</h3>
+    <div id="preview" class="fr-view">
+        <i>This will update as you start typing...</i>
+    </div>
 </div>
 
-<div class="fr-view">
-    Edited text goes here
-</div>
+
 
 <script>
     $(document).ready(function()
     {
-        $(function() { $('textarea').froalaEditor() });
+        $(function() { $('textarea').froalaEditor()
+            .on('froalaEditor.contentChanged', function (e, editor) {
+                $('#preview').html(editor.html.get());
+            })
+        });
 
         $(function() 
         {
             $('#content').froalaEditor(
             {
-                imageUploadURL: './uni/app/Views/Articles/upload_image.php',
                 imageUploadMethod: 'POST',
                 imageMaxSize: 100 * 1024 * 1024, // 10MB
                 imageAllowedTypes: ['jpeg', 'jpg', 'png']
             })
-            .on('froalaEditor.image.beforeUpload', function (e, editor, images) {
-                console.log("Before Upload");
-                // Return false if you want to stop the image upload.
-            })
-            .on('froalaEditor.image.uploaded', function (e, editor, response) {
-                console.log("Image was uploaded to the server");
-            })
-            .on('froalaEditor.image.inserted', function (e, editor, $img, response) {
-                console.log("Image was inserted in the editor.");
-            })
-            .on('froalaEditor.image.replaced', function (e, editor, $img, response) {
-                console.log("Image was replaced in the editor.");
-            })
         });
     });
 </script>
+<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@2.9.1/js/froala_editor.min.js'></script>
+<script src="public/vendor/froala/plugins/js/image.min.js"></script>
