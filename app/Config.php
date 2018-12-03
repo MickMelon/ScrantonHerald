@@ -22,6 +22,7 @@ class Config
      * API keys.
      */
     const GOOGLE_CAPTCHA_KEY = '6LfG23UUAAAAAIFz-cZ97KjwmUQ3qWTMJ1GvQdJg';
+    const OPEN_WEATHER_KEY = 'aaf25a58cc549bdde794ee9cf206297f';
 
     /**
      * Set whether errors should be displayed.
