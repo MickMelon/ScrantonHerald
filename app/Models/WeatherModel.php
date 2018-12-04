@@ -28,7 +28,7 @@ class WeatherModel
             'Temp' => ceil($weather['main']['temp'] - 273.5),
             'Humidity' => $weather['main']['humidity'],
             'WindSpeed' => $weather['wind']['speed'],
-            'DateTime' => date("Y-m-d H:i:s", substr($weather['dt'], 0, 10))
+            'DateTime' => date("l ga", substr($weather['dt'], 0, 10))
         );
 
         return json_encode($formatted);
@@ -45,10 +45,12 @@ class WeatherModel
         $forecast = json_decode($this->getForecast(), true);
         $formatted = array();
 
-        for ($i = 0; $i < 5; $i++)
+        $index = 0;
+        for ($i = 0; $i < 40; $i += 8)
         {
-            $formatted[$i] = $this->formatWeather(json_encode($forecast['list'][$i]));
-            $formatted[$i] = json_decode($formatted[$i], true);
+            $formatted[$index] = $this->formatWeather(json_encode($forecast['list'][$i]));
+            $formatted[$index] = json_decode($formatted[$index], true);
+            $index++;
         }
 
         return json_encode($formatted);
