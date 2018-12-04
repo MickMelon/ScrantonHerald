@@ -56,3 +56,4 @@
 </script>
 <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@2.9.1/js/froala_editor.min.js'></script>
 <script src="public/vendor/froala/plugins/js/image.min.js"></script>
+<script src="public/vendor/froala/plugins/js/font_size.min.js"></script>

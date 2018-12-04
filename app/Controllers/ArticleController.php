@@ -69,16 +69,12 @@ class ArticleController
         // show per page.
         $articles = array_slice($articles, ($page - 1) * $this::ARTICLES_PER_PAGE, $this::ARTICLES_PER_PAGE);
 
-        // Weather
-        $weather = json_decode($this->weatherModel->getFormattedWeather(), true);
-
-        // Forecast
+        // Get the weather forecast to display on the view.
         $forecast = json_decode($this->weatherModel->getFormattedForecast(), true);
 
         // Show the view.
         $view = new View('Articles/index');
         $view->assign('pageTitle', 'Articles');
-        $view->assign('weatherData', $weather);
         $view->assign('forecast', $forecast);
         $view->assign('articles', $articles);
         $view->assign('totalPages', $totalPages);
@@ -105,18 +101,21 @@ class ArticleController
         $article = $this->articleModel->getArticle($id);
         $article = json_decode($article, true);
 
+        // Bootstrap's embed player displays too large when only playing an audio file,
+        // so a check needs to be done to see if the div needs to be shrunk on the view.
+        $fileIsAudio = false;
         if ($article['FileUrl'] != '')
         {
             $path_info = pathinfo($article['FileUrl']);
-            $fileIsAudio = $path_info['extension'] == 'mp3' ? true : false;
+            if (!empty($path_info['extension']))
+                $fileIsAudio = $path_info['extension'] == 'mp3' ? true : false;           
         }
-        else
-            $fileIsAudio = false;
 
+        // Get the user who created the article, i.e. the reporter.
         $reporter = $this->userModel->getUserById($article['ReporterID']);
         $reporter = json_decode($reporter, true);
 
-        // Get all the comments to display... 
+        // Get all the comments to be displayed
         $comments = $this->commentModel->getAllCommentsForArticle($id);
         $comments = json_decode($comments, true);
             
@@ -153,6 +152,8 @@ class ArticleController
         if (isset($_POST['headline']) &&
             isset($_POST['content']))
         {
+            $headlineImage = ArticleController::DEFAULT_HEADLINE_IMAGE;
+            $file = '';
             $content = $_POST['content'];
             $headline = filter_var($_POST['headline'], FILTER_SANITIZE_STRING);
             $reporterId = $_SESSION['id'];
@@ -162,40 +163,21 @@ class ArticleController
             {
                 $imageUpload = new FileUpload($_FILES['headlineImage'], true);
                 $result = $imageUpload->upload();
-                if (!is_array($result)) 
-                    $headlineImage = $result;
-                else 
-                {
-                    foreach ($result as $error)
-                        echo $result . '<br>';
-                    return;
-                }
-
+                if (!is_array($result)) $headlineImage = $result;                   
             }
-            else
-                $headlineImage = ArticleController::DEFAULT_HEADLINE_IMAGE;
 
             // Check if there is a file to be uploaded.
             if (file_exists($_FILES['fileUpload']['tmp_name']))
             {
-                echo "In file upload...<br>";
+                $file = '';
                 $fileUpload = new FileUpload($_FILES['fileUpload']);
                 $result = $fileUpload->upload();
-                if (!is_array($result))
-                    $file = $result;
-                else 
-                {
-                    foreach ($result as $error)
-                        echo $result . '<br>';
-                    return;
-                }
+                if (!is_array($result)) $file = $result;
             }
-            else
-                $file = '';
 
             // Create the article and display the success page.
             $this->articleModel->createArticle($headline, $headlineImage, $content, $file, $reporterId);
-            header('Location: index.php?controller=article&action=create_success');
+            header('Location: index.php?controller=article&action=success');
         }
         else
             header('Location: index.php');
@@ -204,12 +186,15 @@ class ArticleController
     /**
      * Display the "article created successfully" view.
      */
-    public function create_success()
+    public function success()
     {
-        $view = new View('Articles/createsuccess');
+        $view = new View('Articles/success');
         $view->render();
     }
 
+    /**
+     * Shows the reply to comment or article view but only for logged in users.
+     */
     public function reply()
     {
         if (!Util::isLoggedIn())
@@ -224,6 +209,7 @@ class ArticleController
 
             if ($article != null)
             {
+                // Check if the user is replying to a comment.
                 if (isset($_GET['comment']))
                 {
                     $commentId = $_GET['comment'];
@@ -244,6 +230,7 @@ class ArticleController
         else 
             header('Location: index.php');
 
+        // Show the view.
         $view = new View('Articles/reply');
         $view->assign('articleId', $articleId);
         $view->assign('commentId', $commentId);
@@ -251,6 +238,9 @@ class ArticleController
         $view->render();
     }
 
+    /**
+     * Called when a user submits the reply form.
+     */
     public function submit_reply()
     {
         if (!Util::isLoggedIn())
@@ -271,6 +261,7 @@ class ArticleController
             $userId = $_SESSION['id'];
 
             $this->commentModel->createComment($articleId, $commentId, $userId, $content);
+            header('Location: index.php?controller=article&action=success');
         }
         else 
             header('Location: index.php');

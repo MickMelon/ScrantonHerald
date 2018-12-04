@@ -60,9 +60,8 @@ class RegisterController
                 $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
                 $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 
-                $existingUser = json_decode(
-                    $this->userModel->getUserByEmail($email));
-
+                // Check if there is already a user with the specified email
+                $existingUser = json_decode($this->userModel->getUserByEmail($email));
                 if ($existingUser != null)
                 {
                     $errors[] = 'An account with that email address already exists.';

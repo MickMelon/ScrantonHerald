@@ -33,6 +33,10 @@ class PageController
         $view->render();
     }
 
+    /**
+     * Displays the external RSS feed page. 
+     * (CNN US News)
+     */
     public function external_rss()
     {
         $xml = new DOMDocument();
@@ -49,22 +53,6 @@ class PageController
         $view = new View('Pages/external_rss');
         $view->assign('pageTitle', 'External RSS');
         $view->assign('feed', $transformedXml);
-        $view->render();
-    }
-
-    public function rest()
-    {
-        $url = "https://samples.openweathermap.org/data/2.5/weather?zip=18503,us&appid=" . Config::OPEN_WEATHER_KEY;
-        $response = file_get_contents($url);
-        $weatherData = json_decode($response, true);
-
-        $view = new View('Pages/rest');
-        $view->assign('pageTitle', 'Rest');
-        $view->assign('icon', $weatherData['weather'][0]['icon']);
-        $view->assign('weather', $weatherData['weather'][0]['description']);
-        $view->assign('temp', $weatherData['main']['temp'] - 273.5); // Convert from K to C
-        $view->assign('humidity', $weatherData['main']['humidity']);
-        $view->assign('windSpeed', $weatherData['wind']['speed']);
         $view->render();
     }
 }

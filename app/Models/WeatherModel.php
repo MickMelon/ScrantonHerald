@@ -2,21 +2,31 @@
 namespace App\Models;
 
 use App\Config;
-use DateTime;
 
 class WeatherModel
 {
+    /**
+     * Get the json weather file directly from the OpenWeatherMap
+     * Rest API.
+     */
     public function getWeather()
     {
         $url = "https://api.openweathermap.org/data/2.5/weather?zip=18503,us&appid=" . Config::OPEN_WEATHER_KEY;
         return file_get_contents($url);
     }
 
+    /**
+     * Get the formatted weather that is used to display on the view.
+     */
     public function getFormattedWeather()
     {
         return $this->formatWeather($this->getWeather());
     }
 
+    /**
+     * Format the weather received from the API to contain 
+     * only the required data for the view.
+     */
     public function formatWeather($weather)
     {
         $weather = json_decode($weather, true);
@@ -28,18 +38,26 @@ class WeatherModel
             'Temp' => ceil($weather['main']['temp'] - 273.5),
             'Humidity' => $weather['main']['humidity'],
             'WindSpeed' => $weather['wind']['speed'],
-            'DateTime' => date("l ga", substr($weather['dt'], 0, 10))
+            'DateTime' => date("l", substr($weather['dt'], 0, 10))
         );
 
         return json_encode($formatted);
     }
 
+    /**
+     * Get the json weather forecast file directly from the 
+     * OpenWeatherMap Rest API.
+     */
     public function getForecast()
     {
         $url = "https://api.openweathermap.org/data/2.5/forecast?zip=18503,us&appid=" . Config::OPEN_WEATHER_KEY;
         return file_get_contents($url);
     }
 
+    /**
+     * Format the forecast received from the API to contain 
+     * only the required data for the view.
+     */
     public function getFormattedForecast()
     {
         $forecast = json_decode($this->getForecast(), true);
@@ -54,10 +72,5 @@ class WeatherModel
         }
 
         return json_encode($formatted);
-    }
-
-    public function formatForecast($forecast)
-    {
-
     }
 }

@@ -1,2 +1,0 @@
-<meta http-equiv="refresh" content="3;url=index.php" />
-<div class="container"><div class="alert alert-success">Success!<a href="index.php">Click here if your browser does not automatically redirect you.</a></div></div>

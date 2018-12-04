@@ -7,6 +7,9 @@ use PDO;
 
 class CommentModel 
 {
+    /**
+     * Get all the comments for an article.
+     */
     public function getAllCommentsForArticle($articleId)
     {
         $comments = $this->getAllTopLevelCommentsForArticle($articleId);
@@ -31,6 +34,9 @@ class CommentModel
         return json_encode($comments);
     }
 
+    /**
+     * Get all the top level comments for an article.
+     */
     public function getAllTopLevelCommentsForArticle($articleId)
     {
         $db = Database::getInstance();
@@ -46,6 +52,9 @@ class CommentModel
         return json_encode($query->fetchAll());
     }
 
+    /**
+     * Get all the comments for a comment.
+     */
     public function getAllCommentsForComment($commentId)
     {
         $db = Database::getInstance();
@@ -60,6 +69,9 @@ class CommentModel
         return json_encode($query->fetchAll());
     }
 
+    /**
+     * Get a single comment.
+     */
     public function getComment($commentId)
     {
         $db = Database::getInstance();
@@ -73,6 +85,9 @@ class CommentModel
         return json_encode($query->fetch());
     }
 
+    /**
+     * Create a new comment.
+     */
     public function createComment($articleId, $commentId, $userId, $content)
     {
         $dateTime = date("Y-m-d H:i:s");

@@ -6,11 +6,11 @@
             <img class="img-fluid rounded mx-auto" src="<?= $article['HeadlineImageUrl'] ?>" alt="">
             <hr />
             <?php if ($article['FileUrl'] != '') { ?>
-            <div class="embed-responsive embed-responsive-21by9" <?= $fileIsAudio ? 'style="height:2em;"' : '' ?>>
+            <div class="embed-responsive embed-responsive-16by9" <?= $fileIsAudio ? 'style="height:2em;"' : '' ?>>
                 <iframe class="embed-responsive-item" src="<?= $article['FileUrl'] ?>" allowfullscreen></iframe>
             </div>
             <?php } ?>
-            <p class="text-justify"><?= $article['Content'] ?></p>
+            <div class="fr-view text-justify"><?= $article['Content'] ?></div>
             <?php 
             foreach ($comments as $comment) { ?>
                 <div class="card my-4">
@@ -39,3 +39,6 @@
     </div>
 </div>
 </div>
+<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@2.9.1/js/froala_editor.min.js'></script>
+<script src="public/vendor/froala/plugins/js/image.min.js"></script>
+<script src="public/vendor/froala/plugins/js/font_size.min.js"></script>
