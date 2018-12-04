@@ -9,7 +9,7 @@ class Router
      * All controllers and their actions are contained in this array.
      */
     private $controllers = array(
-        'page' => ['error', 'rss'],
+        'page' => ['error', 'our_rss', 'external_rss', 'rest'],
         'article' => ['index', 'single', 'create', 'reply', 'submit_reply', 'submit_create', 'upload_froala_image', 'create_success'],
         'evaluation' => ['index'],
         'login' => ['index', 'login', 'logout', 'success'],

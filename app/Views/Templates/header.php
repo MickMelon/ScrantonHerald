@@ -44,7 +44,12 @@
                         <a class="nav-link" href="jqm/index.html">Electric Imp</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link<?php echo $_GET['action'] == 'rss' ? ' active' : ''; ?>" href="index.php?controller=page&action=rss">RSS Feed</a>
+                        <a class="nav-link<?php echo (isset($_GET['action']) && $_GET['action'] == 'our_rss') ? ' active' : ''; ?>" href="index.php?controller=page&action=our_rss">Our RSS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link<?php echo (isset($_GET['action']) && $_GET['action'] == 'external_rss') ? ' active' : ''; ?>" href="index.php?controller=page&action=external_rss">
+                            External RSS
+                        </a>
                     </li>
                 </ul>
                 <span class="navbar-text">
