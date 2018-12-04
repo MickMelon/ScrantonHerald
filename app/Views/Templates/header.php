@@ -7,9 +7,10 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="public/vendor/bootstrap/css/bootstrap.min.css" />
 
-    <!-- Font Awesome -->
+    <!-- Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    
+    <link href="public/vendor/owfont-master/css/owfont-regular.min.css" rel="stylesheet" type="text/css" />
+
     <!-- Froala Editor -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.css">
     <link href='https://cdn.jsdelivr.net/npm/froala-editor@2.9.1/css/froala_editor.min.css' rel='stylesheet' type='text/css' />
@@ -44,7 +45,12 @@
                         <a class="nav-link" href="jqm/index.html">Electric Imp</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link<?php echo $_GET['action'] == 'rss' ? ' active' : ''; ?>" href="index.php?controller=page&action=rss">RSS Feed</a>
+                        <a class="nav-link<?php echo (isset($_GET['action']) && $_GET['action'] == 'our_rss') ? ' active' : ''; ?>" href="index.php?controller=page&action=our_rss">Our RSS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link<?php echo (isset($_GET['action']) && $_GET['action'] == 'external_rss') ? ' active' : ''; ?>" href="index.php?controller=page&action=external_rss">
+                            External RSS
+                        </a>
                     </li>
                 </ul>
                 <span class="navbar-text">

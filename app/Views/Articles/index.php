@@ -6,24 +6,28 @@
                     <a class="btn btn-success" href="index.php?controller=article&action=create" role="button">Create Article</a>
                 <?php } ?>
                 <p>Click for RSS: <a href="public/rss/newsfeed.xml"><img src="public/img/pic_rss.gif" /></a></p>
+
                 <div class="row my-4">
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-header">Filter Articles</div>
-                            <div class="card-body">
-                                <form method="get" action="index.php?controller=article&action=index">
-                                    <div class="form-group">
-                                        <label for="datefrom">Date From:</label>
-                                        <input class="form-control" type="date" name="datefrom" /><br />
-                                        <label for="dateto">Date To:</label>
-                                        <input class="form-control" type="date" name="dateto" />
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
+                    <div class="col"><div class="card-header">
+                        The weather forecast in Scranton from <a href="https://openweathermap.org">OpenWeatherMap.</a>
+                    </div>
+                        <div class="card-group">
+                        
+                        <?php for ($i = 0; $i < sizeof($forecast); $i++) { ?>
+                            <div class="card">
+                                <i class="my-2 text-center owf owf-<?= $forecast[$i]['ID'] ?>" style="font-size: 5em;"></i>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title"><?= $forecast[$i]['Description'] ?></h5>
+                                    <p class="card-text"><?= $forecast[$i]['Temp'] ?>&deg; C</p>
+                                    <hr />
+                                    <p class="card-text text-muted"><?= $forecast[$i]['DateTime'] ?></p>
+                                </div>
                             </div>
+                        <?php } ?>
                         </div>
                     </div>
                 </div>
+
                 <div class="row my-4">
                     <?php
                     if (sizeof($articles) < 1)
@@ -86,5 +90,24 @@
                     </ul>
                     <p class="text-center">Showing <?= $showingFrom ?> to <?= $showingTo ?> of <?= $totalArticles ?></p>
                 </nav>
+
+                <div class="row my-4">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">Filter Articles</div>
+                            <div class="card-body">
+                                <form method="get" action="index.php?controller=article&action=index">
+                                    <div class="form-group">
+                                        <label for="datefrom">Date From:</label>
+                                        <input class="form-control" type="date" name="datefrom" /><br />
+                                        <label for="dateto">Date To:</label>
+                                        <input class="form-control" type="date" name="dateto" />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
     </main>

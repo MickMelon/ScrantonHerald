@@ -16,7 +16,6 @@ class CommentModel
         foreach ($comments as &$comment)
         {
             $comment['DaysAgo'] = DateHelper::getDaysSince($comment['DateTime']);
-            array_push($comment, 'children');
             $comment['Children'] = array();                     
             $childComments = $this->getAllCommentsForComment($comment['ID']);
             $childComments = json_decode($childComments, true);
@@ -27,7 +26,6 @@ class CommentModel
                     $cc['DaysAgo'] = DateHelper::getDaysSince($cc['DateTime']);
                 $comment['Children'] = $childComments;
             }
-                
         }
 
         return json_encode($comments);

@@ -42,8 +42,8 @@ class View
         $this->assign('loggedIn', Util::isLoggedIn());
         $this->assign('siteName', Config::SITE_NAME);
         $this->assign('siteDesc', Config::SITE_DESC);
+        extract($this->data); 
 
-        extract($this->data);       
         include(View::HEADER_FILE);
         include($this->file);
         include(View::FOOTER_FILE);
