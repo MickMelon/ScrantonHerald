@@ -23,7 +23,37 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">Scranton Weather</div>         
+                            <i class="text-center owf owf-<?= $weatherData['ID'] ?>" style="font-size:7.5em;"></i>                 
+                            <div class="card-body">
+                            
+                                <p class="text-center card-text">
+                                    <?= $weatherData['Description'] ?><br />
+                                    <?= $weatherData['Temp'] ?> C
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">CNN News Feed</div>
+                            <div class="card-body">
+                                <form method="get" action="index.php?controller=article&action=index">
+                                    <div class="form-group">
+                                        <label for="datefrom">Date From:</label>
+                                        <input class="form-control" type="date" name="datefrom" /><br />
+                                        <label for="dateto">Date To:</label>
+                                        <input class="form-control" type="date" name="dateto" />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="row my-4">
                     <?php
                     if (sizeof($articles) < 1)

@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\ArticleModel;
 use App\Models\UserModel;
 use App\Models\CommentModel;
+use App\Models\WeatherModel;
 use App\Util;
 use App\View;
 use App\FileUpload;
@@ -14,6 +15,7 @@ class ArticleController
     private $articleModel;
     private $userModel;
     private $commentModel;
+    private $weatherModel;
 
     const ARTICLES_PER_PAGE = 9;
     const DEFAULT_HEADLINE_IMAGE = 'https://via.placeholder.com/250';
@@ -27,6 +29,7 @@ class ArticleController
         $this->articleModel = new ArticleModel();
         $this->userModel = new UserModel();
         $this->commentModel = new CommentModel();
+        $this->weatherModel = new WeatherModel();
     }
 
     /**
@@ -65,10 +68,15 @@ class ArticleController
         // Get the subset of articles depending on page and how many to
         // show per page.
         $articles = array_slice($articles, ($page - 1) * $this::ARTICLES_PER_PAGE, $this::ARTICLES_PER_PAGE);
+
+        // Weather
+        $weather = $this->weatherModel->getWeather();
+        $weather = json_decode($this->weatherModel->formatWeather($weather), true);
         
         // Show the view.
         $view = new View('Articles/index');
         $view->assign('pageTitle', 'Articles');
+        $view->assign('weatherData', $weather);
         $view->assign('articles', $articles);
         $view->assign('totalPages', $totalPages);
         $view->assign('previousPage', $previousPage);
