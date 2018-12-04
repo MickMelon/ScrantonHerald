@@ -75,4 +75,20 @@ class ArticleModel
 
         $query->execute();
     }
+
+    public function updateArticle($articleId, $headline, $content)
+    {
+        $db = Database::getInstance();
+
+        $sql = "UPDATE `Article` SET " .
+            "`Headline` = :headline, " .
+            "`Content` = :content " .
+            "WHERE `ID` = :articleId";
+        $query = $db->prepare($sql);
+        $query->bindParam(':headline', $headline, PDO::PARAM_STR);
+        $query->bindParam(':content', $content, PDO::PARAM_STR);
+        $query->bindParam(':articleId', $articleId, PDO::PARAM_INT);
+
+        $query->execute();
+    }
 }

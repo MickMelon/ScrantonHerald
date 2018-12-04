@@ -1,6 +1,11 @@
 <div class="container mx-auto my-4">
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
+            <?php if ($isReporter) { ?>
+            <a href="index.php?controller=article&action=update&article=<?= $article['ID'] ?>" class="btn btn-success" role="button">
+                Update Article
+            </a>
+            <?php } ?>
             <h1 class="mt-4"><?= $article['Headline'] ?></h1>
             <p class="lead">Posted by <b><?= $reporter['FirstName'] ?> <?= $reporter['LastName'] ?></b> on the <b><?= date_format(date_create($article['DateTime']), 'jS \of F, Y') ?></b></p>
             <img class="img-fluid rounded mx-auto" src="<?= $article['HeadlineImageUrl'] ?>" alt="">
@@ -11,8 +16,7 @@
             </div>
             <?php } ?>
             <div class="fr-view text-justify"><?= $article['Content'] ?></div>
-            <?php 
-            foreach ($comments as $comment) { ?>
+            <?php foreach ($comments as $comment) { ?>
                 <div class="card my-4">
                     <div class="card-body">
                         <h5 class="card-title"><?= $comment['UserID'] ?></h5>

@@ -40,6 +40,7 @@ class View
     public function render()
     {
         $this->assign('loggedIn', Util::isLoggedIn());
+        $this->assign('isReporter', Util::isReporter());
         $this->assign('siteName', Config::SITE_NAME);
         $this->assign('siteDesc', Config::SITE_DESC);
         extract($this->data); 

@@ -134,7 +134,7 @@ class ArticleController
      */
     public function create()
     {
-        if (!Util::isLoggedIn() || !Util::isReporter())
+        if (!Util::isReporter())
             header('Location: index.php');
 
         $view = new View('Articles/create');
@@ -146,7 +146,7 @@ class ArticleController
      */
     public function submit_create()
     {
-        if (!Util::isLoggedIn() || !Util::isReporter())
+        if (!Util::isReporter())
             header('Location: index.php');
 
         if (isset($_POST['headline']) &&
@@ -264,6 +264,39 @@ class ArticleController
             header('Location: index.php?controller=article&action=success');
         }
         else 
+            header('Location: index.php');
+    }
+
+    public function update()
+    {
+        if (!Util::isReporter() || !isset($_GET['article']))
+            header('Location: index.php');
+
+        $article = json_decode($this->articleModel->getArticle($_GET['article']), true);
+        $view = new View('Articles/update');
+        $view->assign('article', $article);
+        $view->render();
+    }
+
+    public function submit_update()
+    {
+        if (!Util::isReporter())
+            header('Location: index.php');
+
+        if (isset($_POST['headline']) &&
+            isset($_POST['content']) &&
+            isset($_POST['articleId']))
+        {
+            $content = $_POST['content'];
+            $headline = filter_var($_POST['headline'], FILTER_SANITIZE_STRING);
+            $reporterId = $_SESSION['id'];
+            $articleId = $_POST['articleId'];
+
+            // Create the article and display the success page.
+            $this->articleModel->updateArticle($articleId, $headline, $content);
+            header('Location: index.php?controller=article&action=success');
+        }
+        else
             header('Location: index.php');
     }
 

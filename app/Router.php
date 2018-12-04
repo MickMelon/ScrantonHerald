@@ -10,7 +10,7 @@ class Router
      */
     private $controllers = array(
         'page' => ['error', 'our_rss', 'external_rss'],
-        'article' => ['index', 'single', 'create', 'reply', 'submit_reply', 'submit_create', 'upload_froala_image', 'success'],
+        'article' => ['index', 'single', 'create', 'reply', 'submit_reply', 'submit_create', 'upload_froala_image', 'success', 'update', 'submit_update'],
         'evaluation' => ['index'],
         'login' => ['index', 'login', 'logout', 'success'],
         'register' => ['index', 'register', 'success'],
