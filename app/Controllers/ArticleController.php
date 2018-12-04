@@ -70,13 +70,16 @@ class ArticleController
         $articles = array_slice($articles, ($page - 1) * $this::ARTICLES_PER_PAGE, $this::ARTICLES_PER_PAGE);
 
         // Weather
-        $weather = $this->weatherModel->getWeather();
-        $weather = json_decode($this->weatherModel->formatWeather($weather), true);
-        
+        $weather = json_decode($this->weatherModel->getFormattedWeather(), true);
+
+        // Forecast
+        $forecast = json_decode($this->weatherModel->getFormattedForecast(), true);
+
         // Show the view.
         $view = new View('Articles/index');
         $view->assign('pageTitle', 'Articles');
         $view->assign('weatherData', $weather);
+        $view->assign('forecast', $forecast);
         $view->assign('articles', $articles);
         $view->assign('totalPages', $totalPages);
         $view->assign('previousPage', $previousPage);

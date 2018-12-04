@@ -25,13 +25,18 @@
                     </div>
                     <div class="col">
                         <div class="card">
-                            <div class="card-header">Scranton Weather</div>         
-                            <i class="text-center owf owf-<?= $weatherData['ID'] ?>" style="font-size:7.5em;"></i>                 
+                            <div class="card-header">Scranton Weather</div>                    
                             <div class="card-body">
                             
-                                <p class="text-center card-text">
-                                    <?= $weatherData['Description'] ?><br />
-                                    <?= $weatherData['Temp'] ?> C
+                                <p class=" card-text">
+
+                                <?php for ($i = 0; $i < sizeof($forecast); $i++) { ?>
+                                    <i class="owf owf-<?= $forecast[$i]['ID'] ?>"></i><br> 
+                                    <?= $forecast[$i]['Description'] ?><br>
+                                    <?= $forecast[$i]['DateTime'] ?><br>
+                                    <?= $forecast[$i]['Temp'] ?><br><br><br><hr>
+                                <?php } ?>
+
                                 </p>
                             </div>
                         </div>
