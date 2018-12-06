@@ -8,23 +8,12 @@
                 <p>Click for RSS: <a href="public/rss/newsfeed.xml"><img src="public/img/pic_rss.gif" /></a></p>
 
                 <div class="row my-4">
-                    <div class="col"><div class="card-header">
-                        The weather forecast in Scranton from <a href="https://openweathermap.org">OpenWeatherMap.</a>
-                    </div>
-                        <div class="card-group">
-                        
-                        <?php for ($i = 0; $i < sizeof($forecast); $i++) { ?>
-                            <div class="card">
-                                <i class="my-2 text-center owf owf-<?= $forecast[$i]['ID'] ?>" style="font-size: 5em;"></i>
-                                <div class="card-body text-center">
-                                    <h5 class="card-title"><?= $forecast[$i]['Description'] ?></h5>
-                                    <p class="card-text"><?= $forecast[$i]['Temp'] ?>&deg; C</p>
-                                    <hr />
-                                    <p class="card-text text-muted"><?= $forecast[$i]['DateTime'] ?></p>
-                                </div>
-                            </div>
-                        <?php } ?>
+                    <div class="col">
+                        <div id="forecast-text" class="card-header">
+                            The weather forecast in Scranton from <a href="https://openweathermap.org">OpenWeatherMap.</a>
                         </div>
+
+                        <div id="forecast" class="card-group"></div>            
                     </div>
                 </div>
 
@@ -111,3 +100,35 @@
                 </div>
             </div>
     </main>
+
+<script>
+$(document).ready(function(){
+    getWeatherData();
+    
+});
+
+function getWeatherData() {
+    $("#forecast-text").html('Retrieving the latest weather... <img style="height: 2.5em; position: absolute;" src="public/img/loading.gif" />');
+    
+    $.getJSON("api/weather.php", function(result){
+        var date = new Date($.now());
+        $("#forecast-text").html(
+            'The weather forecast in Scranton from <a href="https://openweathermap.org">OpenWeatherMap.</a> ' +
+            'Last updated at: ' + date.getHours() + ":" + date.getMinutes());
+        $("#forecast").html('');
+        
+        $.each(result, function(i, field) { 
+            var html = 
+                '<div class="card">' +
+                '<i class="my-2 text-center owf owf-' + field.ID + '" style="font-size: 5em;"></i><div class="card-body text-center">' +
+                '<h5 class="card-title">' + field.Description + '</h5>' + 
+                '<p class="card-text">' + field.Temp + '&deg; C</p><hr />' + 
+                '<p class="card-text text-muted">' + field.DateTime + '</p></div></div>';
+
+            $("#forecast").append(html);
+        });
+    });
+   
+    setTimeout(getWeatherData, 5000);
+}
+</script>

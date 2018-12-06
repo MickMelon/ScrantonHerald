@@ -5,7 +5,7 @@ use App\Models\WeatherModel;
 $weatherModel = new WeatherModel();
 $forecast = $weatherModel->getFormattedForecast();
 
-$allowedServers = array('mayar.abertay.ac.uk', 'localhost');
+$allowedServers = array('mayar.abertay.ac.uk', 'localhost', '192.168.1.17');
 
 if (in_array($_SERVER['SERVER_NAME'], $allowedServers))
 {
