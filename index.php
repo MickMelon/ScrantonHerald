@@ -21,3 +21,7 @@ if (Config::DISPLAY_ERRORS)
 
 $router = new Router();
 $router->start();
+/*
+$articleModel = new App\Models\ArticleModel();
+$articleModel->t();
+*/

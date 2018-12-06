@@ -9,6 +9,7 @@ use App\Util;
 use App\View;
 use App\FileUpload;
 use App\DateHelper;
+use App\StringHelper;
 
 class ArticleController
 {
@@ -71,6 +72,13 @@ class ArticleController
 
         // Get the weather forecast to display on the view.
         $forecast = json_decode($this->weatherModel->getFormattedForecast(), true);
+
+        // Get the article summary
+        foreach ($articles as &$article)
+        {
+            $article['Content'] = filter_var($article['Content'], FILTER_SANITIZE_STRING);
+            $article['Content'] = StringHelper::substrWithoutCuttingWords($article['Content'], 200);
+        }
 
         // Show the view.
         $view = new View('Articles/index');
@@ -177,6 +185,7 @@ class ArticleController
 
             // Create the article and display the success page.
             $this->articleModel->createArticle($headline, $headlineImage, $content, $file, $reporterId);
+            return;
             header('Location: index.php?controller=article&action=success');
         }
         else

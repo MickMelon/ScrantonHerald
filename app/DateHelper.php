@@ -1,20 +1,15 @@
 <?php 
-/**
- * Credit: https://stackoverflow.com/questions/1416697/converting-timestamp-to-time-ago-in-php-e-g-1-day-ago-2-days-ago
- */
+
 namespace App;
 
 use DateTime;
 
 class DateHelper 
 {
-    public static function getDaysSince_old($dateTime)
-    {
-        $dateTime = new DateTime($dateTime);
-        $today = new DateTime();
-        return $today->diff($dateTime)->format('%a');
-    }
-
+    /**
+     * Gets how many days it has been since the given date.
+     * Credit: https://stackoverflow.com/questions/1416697/converting-timestamp-to-time-ago-in-php-e-g-1-day-ago-2-days-ago
+     */
     public static function getDaysSince($dateTime, $full = false)
     {
         $dateTime = new DateTime($dateTime);

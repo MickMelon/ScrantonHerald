@@ -2,7 +2,10 @@
 namespace App\Models;
 
 use App\Database;
+use App\StringHelper;
 use PDO;
+use DOMDocument;
+use DOMXPath;
 
 class ArticleModel
 {
@@ -61,6 +64,7 @@ class ArticleModel
     {
         $dateTime = date("Y-m-d H:i:s");
 
+        // Add to the SQL database
         $db = Database::getInstance();
 
         $sql = "INSERT INTO `Article` (`Headline`, `HeadlineImageUrl`, `Content`, `FileUrl`, `DateTime`, `ReporterID`) " .
@@ -74,6 +78,58 @@ class ArticleModel
         $query->bindParam(':reporterId', $reporterId, PDO::PARAM_INT);
 
         $query->execute();
+
+        $articleId = $db->lastInsertId();
+
+        // Add to the XML file for the RSS feed
+        $rssFile = 'public/rss/newsfeed.xml';
+        $dom = new DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->load($rssFile);
+
+        $xpath = new DOMXPath($dom);
+        $channel = $xpath->query('/rss/channel')->item(0);
+        echo get_class($channel);
+        if (get_class($channel) == 'DOMElement')
+        {
+            $content = StringHelper::substrWithoutCuttingWords($content, 200);
+            $item = $channel->appendChild($dom->createElement('item'));
+            $item->appendChild($dom->createElement('title', strip_tags($headline)));
+            $item->appendChild($dom->createElement('link', 'index.php?controller=article&amp;action=single&amp;id=' . $articleId));
+            $item->appendChild($dom->createElement('description', strip_tags($content)));  
+
+            $dom->save($rssFile);
+        }
+    }
+
+    public function t()
+    {
+        // Add to the XML file for the RSS feed
+        $rssFile = 'public/rss/newsfeed.xml';
+        $dom = new DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->load($rssFile);
+
+        $xpath = new DOMXPath($dom);
+        $channel = $xpath->query('/rss/channel')->item(0);
+        
+        if (get_class($channel) == 'DOMElement')
+        {
+            $articles = json_decode($this->getAllArticles(), true);
+
+            foreach ($articles as $article)
+            {
+                $content = StringHelper::substrWithoutCuttingWords($article['Content'], 200);
+                $item = $channel->appendChild($dom->createElement('item'));
+                $item->appendChild($dom->createElement('title', strip_tags($article['Headline'])));
+                $item->appendChild($dom->createElement('link', 'index.php?controller=article&amp;action=single&amp;id=' . $article['ID']));
+                $item->appendChild($dom->createElement('description', $content));  
+            }
+
+            $dom->save($rssFile);
+        }
     }
 
     /**

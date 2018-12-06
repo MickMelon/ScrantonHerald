@@ -32,22 +32,7 @@
                                         <?= $article['Headline'] ?>
                                     </a>
                                 </h4>
-                                <p class="card-text">
-                                    <?php
-                                    /**
-                                    * Display the article summary if the content
-                                    * is less than 200 characters.
-                                    */
-                                    $article['Content'] = filter_var($article['Content'], FILTER_SANITIZE_STRING);
-                                    if (strlen($article['Content']) < 200)
-                                        echo $article['Content'];
-                                    else
-                                    {
-                                        $summary = preg_replace('/\s+?(\S+)?$/', '', substr($article['Content'], 0, 201));
-                                        echo substr($summary, 0, 200) . '...';
-                                    }
-                                    ?>
-                                </p>
+                                <p class="card-text"><?= $article['Content'] ?></p>
                                 <a href="index.php?controller=article&action=single&id=<?= $article['ID'] ?>" class="btn btn-primary">
                                     Read more
                                 </a>
