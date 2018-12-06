@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Models\WeatherModel;
+use App\Config;
 
 class WeatherController 
 {
@@ -14,12 +15,9 @@ class WeatherController
 
     public function get()
     {
-        $forecast = $this->weatherModel->getFormattedForecast();
-
-        $allowedServers = array('mayar.abertay.ac.uk', 'localhost', '192.168.1.17');
-
-        if (in_array($_SERVER['SERVER_NAME'], $allowedServers))
+        if (in_array($_SERVER['SERVER_NAME'], Config::ALLOWED_SERVERS))
         {
+            $forecast = $this->weatherModel->getFormattedForecast();
             header("content-type: application/json");
             echo $forecast;
         }

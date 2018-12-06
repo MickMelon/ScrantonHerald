@@ -10,6 +10,11 @@ class Config
     const DB_NAME = 'sql1800833';
     const DB_USER = 'sql1800833';
     const DB_PASS = 'rgcGZejkmcci';
+
+    /**
+     * Allowed host servers.
+     */
+    const ALLOWED_SERVERS = array('mayar.abertay.ac.uk', 'localhost', '192.168.1.17');
     
     /**
      * General site information.

@@ -8,7 +8,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
    </head>
    <body>
-      <div data-role="page" id="pageone">
+      <div data-role="page" id="pageone" data-theme="b">
          <div data-role="header">
             <h1>Scranton Herald</h1>
          </div>
@@ -38,7 +38,7 @@
         });
 
         function getImpData() {
-            $.getJSON('sensordata.php', function (jsondata) {
+            $.getJSON('../index.php?controller=sensor&action=get', function (jsondata) {
                 var internalTemp = [];
                 var externalTemp = [];
                 var voltage = [];

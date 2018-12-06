@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Models\SensorModel;
+use App\Config;
 
 class SensorController
 {
@@ -56,5 +57,21 @@ class SensorController
         );
 
         $response = curl_exec( $ch );
+    }
+
+    public function get()
+    {
+        if (in_array($_SERVER['SERVER_NAME'], Config::ALLOWED_SERVERS))
+        {
+            $sensorData = $this->sensorModel->getAllData();
+            header("content-type: application/json");
+            echo $sensorData;
+        }
+        else 
+        {
+            header('HTTP/1.1 500 Internal Server Booboo');
+            header('Content-Type: application/json; charset=UTF-8');
+            die(json_encode(array('message' => 'You are not an authorised host.', 'code' => 500)));
+        }
     }
 }
