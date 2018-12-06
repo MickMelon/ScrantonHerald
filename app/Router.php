@@ -14,7 +14,8 @@ class Router
         'evaluation' => ['index'],
         'login' => ['index', 'login', 'logout', 'success'],
         'register' => ['index', 'register', 'success'],
-        'sensor' => ['store', 'store_test']);
+        'sensor' => ['store', 'store_test'],
+        'weather' => ['get']);
 
     /**
      * Gets the specified controller and action and acts on it to 
@@ -70,6 +71,10 @@ class Router
 
             case 'sensor':
                 $controller = new Controllers\SensorController();
+                break;
+
+            case 'weather':
+                $controller = new Controllers\WeatherController();
                 break;
 
             default:

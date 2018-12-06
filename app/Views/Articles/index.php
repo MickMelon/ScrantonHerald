@@ -110,7 +110,7 @@ $(document).ready(function(){
 function getWeatherData() {
     $("#forecast-text").html('Retrieving the latest weather... <img style="height: 2.5em; position: absolute;" src="public/img/loading.gif" />');
     
-    $.getJSON("api/weather.php", function(result){
+    $.getJSON("index.php?controller=weather&action=get", function(result){
         var date = new Date($.now());
         $("#forecast-text").html(
             'The weather forecast in Scranton from <a href="https://openweathermap.org">OpenWeatherMap.</a> ' +
