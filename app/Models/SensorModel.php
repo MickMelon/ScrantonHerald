@@ -28,7 +28,7 @@ class SensorModel
     {
         $db = Database::getInstance();
 
-        $sql = 'SELECT * FROM `SensorData`';
+        $sql = 'SELECT * FROM `SensorData` ORDER BY `DateTime` ASC LIMIT 10';
         $query = $db->prepare($sql);
         $query->execute();
 

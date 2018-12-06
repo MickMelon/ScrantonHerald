@@ -20,7 +20,7 @@
                 in the Scranton Herald offices!
             </p>
 
-            <div class="chart-container" style="min-height: 50vh;">
+            <div class="chart-container" style="min-height: 50vh; max-height: 50vh;">
                 <canvas id="temperatureChart"></canvas>
             </div>
 
@@ -33,89 +33,110 @@
       </div>
 
       <script>
-          $(document).ready(function()
-          {
-              $.getJSON('sensordata.php', function(jsondata)
-              {
-                  var internalTemp = [];
-                  var externalTemp = [];
-                  var dates = [];
+        $(document).ready(function () {
+            getImpData();
+        });
 
-                  $.each(jsondata, function(i) {
-                      var data = jsondata[i].JsonData;
-                      var obj = $.parseJSON(data);
+        function getImpData() {
+            $.getJSON('sensordata.php', function (jsondata) {
+                var internalTemp = [];
+                var externalTemp = [];
+                var voltage = [];
+                var lightLevel = []
+                var dates = [];
 
-                      internalTemp.push(parseInt(obj.internal));
-                      externalTemp.push(parseInt(obj.external));
-                      dates.push(jsondata[i].DateTime);
-                  });
+                $.each(jsondata, function (i) {
+                    var data = jsondata[i].JsonData;
+                    var obj = $.parseJSON(data);
 
-                  var ctx = document.getElementById('temperatureChart').getContext('2d');
-                  var chart = new Chart(ctx,
-                  {
-                      // The type of chart we want to create
-                      type: 'line',
+                    internalTemp.push(parseInt(obj.internal));
+                    externalTemp.push(parseInt(obj.external));
+                    voltage.push(parseInt(obj.voltage));
+                    lightLevel.push(parseInt(obj.lightlevel));
+                    dates.push(jsondata[i].DateTime);
+                });
 
-                      // The data for our dataset
-                      data:
-                      {
-                          labels: dates,
-                          datasets:
-                          [
-                              {
-                                  label: "Internal temperature",
-                                  backgroundColor: 'rgba(255, 99, 132, 0)',
-                                  borderColor: 'rgb(255, 99, 132)',
-                                  data: internalTemp
-                              },
-                              {
-                                  label: "External temperature",
-                                  backgroundColor: 'rgba(255, 255, 255, 0)',
-                                  borderColor: 'rgb(55, 99, 132)',
-                                  data: externalTemp
-                              },
-                          ]
-                      },
+                var ctx = document.getElementById('temperatureChart').getContext('2d');
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'line',
 
-                      // Configuration options go here
-                      options:
-                      {
-                          maintainAspectRatio: false,
-                          responsive: true,
-                          title:
-                          {
-                              display: true,
-                              text: 'Temperature Readings from the Electric Imp'
-                          },
-                          scales:
-                          {
-                              xAxes:
-                              [
-                                  {
-                                      display: true,
-                                      scaleLabel:
-                                      {
-                                          display: true,
-                                          labelString: 'Time'
-                                      }
-                                  }
-                              ],
-                              yAxes:
-                              [
-                                  {
-                                      display: true,
-                                      scaleLabel:
-                                      {
-                                          display: true,
-                                          labelString: 'Temperature (Celcius)'
-                                      }
-                                  }
-                              ]
-                          }
-                      }
-                  });
-              });
-          });
+                    // The data for our dataset
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                                label: "Internal temperature",
+                                backgroundColor: 'rgba(255, 99, 132, 0)',
+                                borderColor: 'rgb(255, 99, 132)',
+                                data: internalTemp,
+                                yAxisID: 'y-axis-1'
+                            },
+                            {
+                                label: "External temperature",
+                                backgroundColor: 'rgba(255, 255, 255, 0)',
+                                borderColor: 'rgb(55, 99, 132)',
+                                data: externalTemp
+                            },
+                            {
+                                label: "Voltage",
+                                backgroundColor: 'rgba(255, 255, 255, 0)',
+                                borderColor: 'rgba(0, 255, 255)',
+                                data: voltage
+                            },
+                            {
+                                label: "Light Level",
+                                backgroundColor: 'rgba(255, 255, 255, 0)',
+                                borderColor: 'rgba(0, 255, 0)',
+                                data: lightLevel,
+                                yAxisID: 'y-axis-2'
+                            }
+                        ]
+                    },
+
+                    // Configuration options go here
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'Temperature Readings from the Electric Imp'
+                        },
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Time'
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                position: 'left',
+                                id: 'y-axis-1',
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Temperature (Celcius)',
+                                }
+                            }, 
+                            {
+                                display: true,
+                                position: 'right',
+                                id: 'y-axis-2',
+                                gridLines: {
+                                    drawOnChartArea: false
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Light Level (Lux)',
+                                }
+                            }]
+                        }
+                    }
+                });
+                
+                setTimeout(getImpData, 5000);
+            });
+        }
       </script>
    </body>
 </html>
