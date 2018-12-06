@@ -2,8 +2,11 @@
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
             <?php if ($isReporter) { ?>
-            <a href="index.php?controller=article&action=update&article=<?= $article['ID'] ?>" class="btn btn-success" role="button">
-                Update Article
+            <a href="index.php?controller=article&action=update&id=<?= $article['ID'] ?>" class="btn btn-success" role="button">
+                Update
+            </a>
+            <a href="index.php?controller=article&action=delete&id=<?= $article['ID'] ?>" class="btn btn-danger" role="button">
+                Delete
             </a>
             <?php } ?>
             <h1 class="mt-4"><?= $article['Headline'] ?></h1>

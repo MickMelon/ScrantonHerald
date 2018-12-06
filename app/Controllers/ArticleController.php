@@ -269,10 +269,10 @@ class ArticleController
 
     public function update()
     {
-        if (!Util::isReporter() || !isset($_GET['article']))
+        if (!Util::isReporter() || !isset($_GET['id']))
             header('Location: index.php');
 
-        $article = json_decode($this->articleModel->getArticle($_GET['article']), true);
+        $article = json_decode($this->articleModel->getArticle($_GET['id']), true);
         $view = new View('Articles/update');
         $view->assign('article', $article);
         $view->render();
@@ -297,6 +297,21 @@ class ArticleController
             header('Location: index.php?controller=article&action=success');
         }
         else
+            header('Location: index.php');
+    }
+
+    public function delete()
+    {
+        if (!Util::isReporter())
+            header('Location: index.php');
+
+        if (isset($_GET['id']))
+        {
+            $articleId = $_GET['id'];
+            $this->articleModel->deleteArticle($articleId);
+            header('Location: index.php?controller=article&action=success');
+        }
+        else 
             header('Location: index.php');
     }
 

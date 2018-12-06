@@ -76,6 +76,9 @@ class ArticleModel
         $query->execute();
     }
 
+    /**
+     * Updates an article.
+     */
     public function updateArticle($articleId, $headline, $content)
     {
         $db = Database::getInstance();
@@ -87,6 +90,20 @@ class ArticleModel
         $query = $db->prepare($sql);
         $query->bindParam(':headline', $headline, PDO::PARAM_STR);
         $query->bindParam(':content', $content, PDO::PARAM_STR);
+        $query->bindParam(':articleId', $articleId, PDO::PARAM_INT);
+
+        $query->execute();
+    }
+
+    /**
+     * Deletes an article.
+     */
+    public function deleteArticle($articleId)
+    {
+        $db = Database::getInstance();
+
+        $sql = "DELETE FROM `Article` WHERE `ID` = :articleId";
+        $query = $db->prepare($sql);
         $query->bindParam(':articleId', $articleId, PDO::PARAM_INT);
 
         $query->execute();
