@@ -19,7 +19,7 @@ class ArticleController
     private $weatherModel;
 
     const ARTICLES_PER_PAGE = 9;
-    const DEFAULT_HEADLINE_IMAGE = 'https://via.placeholder.com/250';
+    const DEFAULT_HEADLINE_IMAGE = 'https://via.placeholder.com/750x250';
 
     /**
      * Creates a new ArticlesController object

@@ -17,13 +17,13 @@
                     </div>
                 </div>
 
-                <div class="row my-4">
+                <div class="row my-4 equal">
                     <?php
                     if (sizeof($articles) < 1)
                         echo '<div class="col"><div class="alert alert-warning">Could not find any articles.</div></div>';
                     else foreach ($articles as $article)
                     { ?>
-                    <div class="col-md-4 d-flex align-items-stretch">
+                    <div class="col-md-4">
                         <div class="card mb-4 shadow-sm">
                             <img class="card-img-top" src="<?= $article['HeadlineImageUrl'] ?>" />
                             <div class="card-body">
