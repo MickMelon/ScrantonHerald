@@ -89,4 +89,21 @@ class RegisterController
         $view->assign('pageTitle', 'Success');
         $view->render();
     }
+
+    public function verify()
+    {
+        if (isset($_GET['email']) && isset($_GET['hash']))
+        {
+            $email = $_GET['email'];
+            $hash = $_GET['hash'];
+
+            $user = json_decode($this->userModel->getUserByEmail($email), true);
+            if ($user == null) header('Location: index.php');
+            
+            if ($user['VerHash'] == $hash)
+                $this->userModel->activateUser($user['ID']);
+
+            header('Location: index.php');
+        }
+    }
 }

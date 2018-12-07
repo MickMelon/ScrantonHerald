@@ -25,6 +25,6 @@ class Util
         $user = $usersModel->getUserById($_SESSION['id']);
         $user = json_decode($user, true);
 
-        return $user['Role'] == 2;
+        return $user['Role'] == 1;
     }
 }

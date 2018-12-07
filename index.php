@@ -5,6 +5,7 @@
 * Include the config and db files as these will be required for most
 * requests. Then include the router file to effectively start the app.
 */
+
 session_start();
 
 require_once('vendor/autoload.php');
@@ -21,6 +22,7 @@ if (Config::DISPLAY_ERRORS)
 
 $router = new Router();
 $router->start();
+
 /*
 $articleModel = new App\Models\ArticleModel();
 $articleModel->t();

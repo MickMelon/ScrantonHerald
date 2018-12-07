@@ -45,6 +45,13 @@ class LoginController
 
             if ($result > 0)
             {
+                if (!$this->userModel->isActivated($result))
+                {
+                    $errors[] = 'This account has not been verified. Please check your emails.';
+                    $this->index($errors);
+                    return;
+                } 
+
                 $_SESSION['id'] = $result;
                 $_SESSION['token'] = rand(100000, 999999);
 

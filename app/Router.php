@@ -19,8 +19,9 @@ class Router
         $action = isset($_GET['action']) ? strtolower($_GET['action']) : 'index';
 
         // Check to see if the class and method exist, if they do, call it.
-        $className = 'App\Controllers\\' . $controller . 'controller';
-        if (class_exists($className))  
+        $className = 'App\Controllers\\' . ucfirst($controller) . 'Controller';
+
+        if (class_exists($className, true))  
         {
             $controllerClass = new $className();
             if (method_exists($controllerClass, $action))
@@ -32,7 +33,7 @@ class Router
 
         // Call the index of the article controller if the specified 
         // controller or action were not found.
-        $articleController = new Controllers\ArticleController();
-        $articleController->index();             
+        $pageController = new Controllers\PageController();
+        $pageController->error();             
     }
 }

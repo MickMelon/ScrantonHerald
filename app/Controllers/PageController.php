@@ -27,9 +27,9 @@ class PageController
 
         $view = new View('Pages/rss');
         $view->assign('pageTitle', 'RSS Feed');
-        $view->assign('feedTitle', $feed->channel[0]->title);
-        $view->assign('feedDescription', $feed->channel[0]->description);
-        $view->assign('items', $feed->channel[0]->item);
+        $view->assign('feedTitle', $feed->channel->title);
+        $view->assign('feedDescription', $feed->channel->description);
+        $view->assign('items', $feed->channel->item);
         $view->render();
     }
 
@@ -48,7 +48,8 @@ class PageController
         $proc = new XSLTProcessor();
         $proc->importStyleSheet($xsl);
         
-        $transformedXml = $proc->transformToXML($xml);
+        echo $proc->transformToXML($xml);
+        return;
 
         $view = new View('Pages/external_rss');
         $view->assign('pageTitle', 'External RSS');
