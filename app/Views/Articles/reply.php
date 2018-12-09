@@ -1,7 +1,11 @@
-Replying to: <?= $replyingTo; ?>
+
 
 <div class="container">
+    <h3>Replying to <b><?php echo $isComment ? 'Comment' : 'Article' ?></b></h3>
+    <h5><a href="index.php?controller=article&action=single&id=<?= $articleId ?>"><?= $headline ?></a></h5>
+    <p><?= $content ?> by <?= $name ?></p>
     <form name="replyForm" action="index.php?controller=article&action=submit_reply" method="post">
+
         <div class="form-group">
             <label for="content">Content</label>
             <textarea rows="10" class="form-control" id="content" name="content"></textarea>
@@ -10,8 +14,8 @@ Replying to: <?= $replyingTo; ?>
             </div>
         </div>
 
-        <input type="hidden" id="articleId" name="articleId" value="<?= $articleId ?>" />
-        <input type="hidden" id="commentId" name="commentId" value="<?= $commentId; ?>" />
+        <input type="hidden" id="article" name="article" value="<?= $articleId ?>" />
+        <input type="hidden" id="comment" name="comment" value="<?= $commentId; ?>" />
         <button type="submit" class="btn btn-primary">Reply</button>
     </form>
 </div>

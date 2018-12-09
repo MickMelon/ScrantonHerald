@@ -3,10 +3,18 @@ namespace App\Models;
 
 use App\Database;
 use App\DateHelper;
+use App\Models\UserModel;
 use PDO;
 
 class CommentModel 
 {
+    private $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+    }
+
     /**
      * Get all the comments for an article.
      */
@@ -18,6 +26,8 @@ class CommentModel
         // Add all child comments to the comments
         foreach ($comments as &$comment)
         {
+            $name = json_decode($this->userModel->getName($comment['UserID']), true);
+            $comment['Name'] = $name['Name'];
             $comment['DaysAgo'] = DateHelper::getDaysSince($comment['DateTime']);
             $comment['Children'] = array();                     
             $childComments = $this->getAllCommentsForComment($comment['ID']);
@@ -26,7 +36,12 @@ class CommentModel
             if (count($childComments) > 0)
             {
                 foreach ($childComments as &$cc)
+                {
+                    $childName = json_decode($this->userModel->getName($cc['UserID']), true);
+                    $cc['Name'] = $childName['Name'];
                     $cc['DaysAgo'] = DateHelper::getDaysSince($cc['DateTime']);
+                }
+                    
                 $comment['Children'] = $childComments;
             }
         }

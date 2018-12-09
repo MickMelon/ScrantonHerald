@@ -19,33 +19,72 @@
             </div>
             <?php } ?>
             <div class="fr-view text-justify"><?= $article['Content'] ?></div>
-            <?php foreach ($comments as $comment) { ?>
-                <div class="card my-4">
-                    <div class="card-body">
-                        <h5 class="card-title"><?= $comment['UserID'] ?></h5>
-                        <h6 class="card-subtitle mb-2 text-muted"><?= $comment['DaysAgo'] ?></h6>
-                        <p class="card-text"><?= $comment['Content'] ?></p>
-                    </div>
+            
+            <!-- Comments -->
+            <hr />
+            <h3>Comments</h3>
+            <?php if ($loggedIn) { ?>
+            <div class="card my-4">
+                <h5 class="card-header">Leave a Comment:</h5>
+                <div class="card-body">
+                    <form action="index.php?controller=article&action=submit_reply" method="post">
+                        <div class="form-group">
+                            <input type="hidden" id="article" name="article" value="<?= $article['ID'] ?>" />
+                            <textarea name="content" id="content" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <?php } else { ?>
+            <p><i>You must be <a href="index.php?controller=login&action=index">logged in</a> to post a comment.</i></p>
+            <?php } ?>
+
+            <?php if (sizeof($comments) > 0) foreach ($comments as $comment) { ?>
+            <div class="media mb-4">
+            <img class="d-flex mr-3 rounded-circle" style="width: 5%;" src="public/img/user.png" alt="" />
+                <div class="media-body">
+                    <h5 class="mt-0"><?= $comment['Name'] ?></h5>
+                    <?= $comment['Content'] ?>
+                   
+                    
                     <?php foreach ($comment['Children'] as $child) { ?>
-                    <div class="card my-1" style="margin-left: 10%;">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= $child['UserID'] ?></h5>
-                            <h6 class="card-subtitle mb-2 text-muted"><?= $child['DaysAgo'] ?></h6>
-                            <p class="card-text"><?= $child['Content'] ?></p>
+                    <div class="media mt-4">
+                    <img class="d-flex mr-3 rounded-circle" style="width: 5%;" src="public/img/user.png" alt="" />
+                        <div class="media-body">
+                            <h5 class="mt-0"><?= $child['Name'] ?></h5>
+                            <?= $child['Content'] ?>                          
                         </div>
                     </div>
+                    <?php } 
+                    if ($loggedIn) { ?>
+                    <p class="text-right"><a class="text-right" href="index.php?controller=article&action=reply&article=<?= $article['ID'] ?>&comment=<?= $comment['ID'] ?>">Reply</a></p>
                     <?php } ?>
-                    <div class="card-body">
-                        <a href="index.php?controller=article&action=reply&article=<?= $article['ID'] ?>&comment=<?= $comment['ID'] ?>">
-                                Reply
-                        </a>
-                    </div>
+                    <hr>
                 </div>
+            </div>
+            <?php } else { ?>
+            <p>There are no comments to display! :(</p>
             <?php } ?>
         </div>
     </div>
 </div>
 </div>
+
+<script>
+    $(document).ready(function()
+    {
+        $(function() { $('textarea').froalaEditor() });
+
+        $(function() 
+        {
+            $('#content').froalaEditor(
+            {
+                imageUploadMethod: 'POST',
+                imageMaxSize: 100 * 1024 * 1024, // 10MB
+                imageAllowedTypes: ['jpeg', 'jpg', 'png']
+            })
+        });
+    });
+</script>
 <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@2.9.1/js/froala_editor.min.js'></script>
-<script src="public/vendor/froala/plugins/js/image.min.js"></script>
-<script src="public/vendor/froala/plugins/js/font_size.min.js"></script>

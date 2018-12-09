@@ -126,7 +126,7 @@ class ArticleController
         // Get all the comments to be displayed
         $comments = $this->commentModel->getAllCommentsForArticle($id);
         $comments = json_decode($comments, true);
-            
+                 
         // Show the view.
         $view = new View('Articles/single');
         $view->assign('pageTitle', $article['Headline']);
@@ -212,12 +212,12 @@ class ArticleController
         if (isset($_GET['article']))
         {
             $articleId = $_GET['article'];
-            $commentId = -1;
-
             $article = json_decode($this->articleModel->getArticle($articleId), true);
 
             if ($article != null)
             {
+                $isComment = false;
+
                 // Check if the user is replying to a comment.
                 if (isset($_GET['comment']))
                 {
@@ -225,12 +225,20 @@ class ArticleController
                     $comment = json_decode($this->commentModel->getComment($commentId), true);
 
                     if ($comment != null)
-                        $replyingTo = $comment['Content'] . ' by ' . $comment['UserID'];
+                    {
+                        $name = json_decode($this->userModel->getName($comment['UserID']), true);
+                        $content = $comment['Content'];   
+                        $isComment = true;
+                    }                        
                     else 
                         header('Location: index.php?controller=page&action=error');
                 }
                 else 
-                    $replyingTo = $article['Headline'] . ' by ' . $article['ReporterID'];
+                {
+                    $name = json_decode($this->userModel->getName($article['ReporterID']), true);
+                    $content = '';
+                }
+                    
 
             }
             else 
@@ -241,9 +249,12 @@ class ArticleController
 
         // Show the view.
         $view = new View('Articles/reply');
-        $view->assign('articleId', $articleId);
-        $view->assign('commentId', $commentId);
-        $view->assign('replyingTo', $replyingTo);
+        $view->assign('articleId', $article['ID']);
+        $view->assign('commentId', $comment == null ? null : $comment['ID']);
+        $view->assign('name', $name['Name']);
+        $view->assign('content', $content);
+        $view->assign('headline', $article['Headline']);
+        $view->assign('isComment', $isComment);
         $view->render();
     }
 
@@ -255,22 +266,21 @@ class ArticleController
         if (!Util::isLoggedIn())
             header('Location: index.php');
 
-        if (isset($_POST['articleId'])
-            && isset($_POST['commentId'])
+        if (isset($_POST['article'])
             && isset($_POST['content']))
         {
-            $articleId = $_POST['articleId'];
-            $commentId = $_POST['commentId'];
+            $articleId = $_POST['article'];
+            $commentId = isset($_POST['comment']) ? $_POST['comment'] : null;
             $content = $_POST['content'];
 
             // Make sure the article exists
             $article = $this->articleModel->getArticle($articleId);
             if ($article == null) return;
-            if ($commentId == -1) $commentId = null;
+
             $userId = $_SESSION['id'];
 
             $this->commentModel->createComment($articleId, $commentId, $userId, $content);
-            header('Location: index.php?controller=article&action=success');
+            header('Location: index.php?controller=article&action=single&id=' . $articleId);
         }
         else 
             header('Location: index.php');

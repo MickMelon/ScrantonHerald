@@ -86,6 +86,19 @@ class UserModel
         mail($email, $subject, $message, $headers);
     }
 
+    public function getName($id)
+    {
+        $db = Database::getInstance();
+
+        $sql = "SELECT CONCAT(`FirstName`, ' ', `LastName`) AS `Name` " .
+            "FROM `User` WHERE `ID` = :id LIMIT 1";
+        $query = $db->prepare($sql);
+        $query->bindParam(':id', $id, PDO::PARAM_INT);
+        $query->execute();
+
+        return json_encode($query->fetch());
+    }
+
     public function activateUser($id)
     {
         $db = Database::getInstance();

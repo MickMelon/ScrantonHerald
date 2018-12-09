@@ -23,7 +23,7 @@
     <!-- Site -->
     <link rel="stylesheet" type="text/css" href="public/css/site.css" />
     
-    <title><?= $siteName ?><?php if (isset($pageTitle)) echo ' - ' . $pageTitle; ?></title>
+    <title><?php if (isset($pageTitle)) echo $pageTitle . ' - '; ?><?= $siteName ?></title>
 </head>
 <body>
     <header>
