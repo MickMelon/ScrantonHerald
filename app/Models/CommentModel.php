@@ -59,7 +59,7 @@ class CommentModel
         $sql = "SELECT * FROM `Comment` " .
             "WHERE `ArticleID` = :articleID " .
             "AND `ParentCommentId` IS NULL " .
-            "ORDER BY `DateTime` ASC";
+            "ORDER BY `DateTime` DESC";
         $query = $db->prepare($sql);
         $query->bindParam(':articleID', $articleId, PDO::PARAM_INT);
         $query->execute();
@@ -76,7 +76,7 @@ class CommentModel
 
         $sql = "SELECT * FROM `Comment` " .
             "WHERE `ParentCommentId` = :commentId " .
-            "ORDER BY `DateTime` ASC";
+            "ORDER BY `DateTime` DESC";
         $query = $db->prepare($sql);
         $query->bindParam(':commentId', $commentId, PDO::PARAM_INT);
         $query->execute();

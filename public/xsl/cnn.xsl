@@ -3,25 +3,37 @@
 
 <xsl:template match="/">
     <html>
+        <head>
+            <title>RSS Feed with XSLT</title>
+            <link rel="stylesheet" type="text/css" href="public/vendor/bootstrap/css/bootstrap.min.css" />
+        </head>
         <body>
-            <xsl:apply-templates select="rss/channel/title" />
-            <xsl:apply-templates select="rss/channel/description" />
-            <table border="1">
-                <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                </tr>
-                <xsl:apply-templates select="rss/channel/item" />
-            </table>
+            <div class="container">  
+                <div class="row">   
+                    <div class="col-md-8 mx-auto">
+                        <a href="index.php">Go back to Scranton Herald</a>
+                        <br /><br />
+                        <xsl:apply-templates select="rss/channel/title" />
+                        <xsl:apply-templates select="rss/channel/description" />
+                        <xsl:apply-templates select="rss/channel/item" />
+                    </div>
+                </div>          
+            </div>
         </body>
     </html>
 </xsl:template>
 
 <xsl:template match="item">    
-        <tr>
+    <div class="card card-outline-secondary my-3">
+        <div class="card-header">
             <xsl:apply-templates select="title" />
+        </div>
+        <div class="card-body">
+            <xsl:apply-templates select="pubDate" />
             <xsl:apply-templates select="description" />
-        </tr>
+            <xsl:apply-templates select="link" />
+        </div>
+    </div>
 </xsl:template>
 
 <xsl:template match="rss/channel/title">
@@ -33,11 +45,19 @@
 </xsl:template>
 
 <xsl:template match="rss/channel/item/title">
-    <td><xsl:value-of select="."/></td>
+    <xsl:value-of select="."/>
 </xsl:template>
 
 <xsl:template match="rss/channel/item/description">
-    <td><xsl:value-of select="."/></td>
+    <p class="card-text"><xsl:value-of select="."/></p>
+</xsl:template>
+
+<xsl:template match="rss/channel/item/link">
+    <a href="{.}" class="btn btn-success">Read more</a>
+</xsl:template>
+
+<xsl:template match="rss/channel/item/pubDate">
+    <p class="text-muted"><xsl:value-of select="."/></p>
 </xsl:template>
 
 </xsl:stylesheet>

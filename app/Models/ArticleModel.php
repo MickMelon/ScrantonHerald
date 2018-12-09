@@ -100,7 +100,7 @@ class ArticleModel
             $desc = StringHelper::substrWithoutCuttingWords($desc, 200);
             $item = $channel->insertBefore($dom->createElement('item'), $channel->firstChild);
             $item->appendChild($dom->createElement('title', strip_tags($title)));
-            $item->appendChild($dom->createElement('link', 'index.php?controller=article&amp;action=single&amp;id=' . $id));
+            $item->appendChild($dom->createElement('link', 'https://mayar.abertay.ac.uk/~1800833/index.php?controller=article&amp;action=single&amp;id=' . $id));
             $item->appendChild($dom->createElement('description', strip_tags($desc)));  
 
             $dom->save($rssFile);

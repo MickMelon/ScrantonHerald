@@ -44,7 +44,7 @@
             <div class="media mb-4">
             <img class="d-flex mr-3 rounded-circle" style="width: 5%;" src="public/img/user.png" alt="" />
                 <div class="media-body">
-                    <h5 class="mt-0"><?= $comment['Name'] ?></h5>
+                    <strong><?= $comment['Name'] ?></strong> <small class="text-muted">commented <?= $comment['DaysAgo'] ?></small><br />              
                     <?= $comment['Content'] ?>
                    
                     
@@ -52,7 +52,7 @@
                     <div class="media mt-4">
                     <img class="d-flex mr-3 rounded-circle" style="width: 5%;" src="public/img/user.png" alt="" />
                         <div class="media-body">
-                            <h5 class="mt-0"><?= $child['Name'] ?></h5>
+                        <strong><?= $child['Name'] ?></strong> <small class="text-muted">commented <?= $child['DaysAgo'] ?></small><br />
                             <?= $child['Content'] ?>                          
                         </div>
                     </div>
