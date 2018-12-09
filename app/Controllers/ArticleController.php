@@ -109,6 +109,8 @@ class ArticleController
         $article = $this->articleModel->getArticle($id);
         $article = json_decode($article, true);
 
+        if ($article == null) header('Location: index.php?controller=pages&action=error');
+
         // Bootstrap's embed player displays too large when only playing an audio file,
         // so a check needs to be done to see if the div needs to be shrunk on the view.
         $fileIsAudio = false;

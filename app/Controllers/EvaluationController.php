@@ -34,6 +34,8 @@ class EvaluationController
             $week = $evaluation->Week;
         }
 
+        if ($evaluation == null) header('Location: index.php?controller=page&action=error');
+
         $totalEvaluations = $this->evaluationModel->getTotalEvaluations();
 
         $view = new View('Evaluations/index');
