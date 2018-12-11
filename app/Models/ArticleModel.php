@@ -86,6 +86,10 @@ class ArticleModel
         $this->addArticleToRss($articleId, $headline, $content);
     }
 
+    /**
+     * Adds an article to the XML file for the RSS feed. Called when a new 
+     * article is created.
+     */
     private function addArticleToRss($id, $title, $desc)
     {
         // Add to the XML file for the RSS feed

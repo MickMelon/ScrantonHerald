@@ -88,6 +88,9 @@ class UserModel
         mail($email, $subject, $message, $headers);
     }
 
+    /**
+     * Gets an account's first and last names by the ID.
+     */
     public function getName($id)
     {
         $db = Database::getInstance();
@@ -101,6 +104,10 @@ class UserModel
         return json_encode($query->fetch());
     }
 
+    /**
+     * Activates a user to allow them to browse the site. Called when the 
+     * user has verified themselves through email.
+     */
     public function activateUser($id)
     {
         $db = Database::getInstance();
@@ -112,6 +119,10 @@ class UserModel
         $query->execute();
     }
 
+    /**
+     * Checks if an account has been activated through the email verification 
+     * process upon registration.
+     */
     public function isActivated($id)
     {
         $db = Database::getInstance();

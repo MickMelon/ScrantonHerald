@@ -28,6 +28,9 @@ class FileUpload
         $this->isImage = $isImage;
     }
 
+    /** 
+     * Uploads the file specified from the constructor.
+     */
     public function upload($fileName = false)
     {
         if ($this->fileSize > 0)
@@ -51,6 +54,9 @@ class FileUpload
         }
     }
 
+    /**
+     * Verifies that the file is of an allowed type.
+     */
     private function verifyFileType()
     {
         $errors = array();

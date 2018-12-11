@@ -287,6 +287,9 @@ class ArticleController
             header('Location: index.php');
     }
 
+    /**
+     * Called when a reply to a comment happens successfully.
+     */
     public function reply_success()
     {
         if (isset($_GET['id']))
@@ -298,6 +301,9 @@ class ArticleController
         else header('Location: index.php');
     }
 
+    /**
+     * Shows the update article page.
+     */
     public function update()
     {
         if (!Util::isReporter() || !isset($_GET['id']))
@@ -309,6 +315,9 @@ class ArticleController
         $view->render();
     }
 
+    /**
+     * Called when the update article form has been submitted.
+     */
     public function submit_update()
     {
         if (!Util::isReporter())

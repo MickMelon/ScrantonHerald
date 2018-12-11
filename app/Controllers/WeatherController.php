@@ -13,6 +13,9 @@ class WeatherController
         $this->weatherModel = new WeatherModel();
     }
 
+    /**
+     * Gets the latest weather forecast from the open weather api.
+     */
     public function get()
     {
         if (in_array($_SERVER['SERVER_NAME'], Config::ALLOWED_SERVERS))

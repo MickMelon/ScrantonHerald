@@ -2,8 +2,11 @@
 /**
 * This index page acts as the entry point to the web application.
 *
-* Include the config and db files as these will be required for most
-* requests. Then include the router file to effectively start the app.
+* Composer's autoloader is included which loads up all the classes
+* required for the application. 
+*
+* The router is then started which will result in the desired page
+* being displayed.
 */
 
 session_start();
@@ -22,8 +25,3 @@ if (Config::DISPLAY_ERRORS)
 
 $router = new Router();
 $router->start();
-
-/*
-$articleModel = new App\Models\ArticleModel();
-$articleModel->t();
-*/

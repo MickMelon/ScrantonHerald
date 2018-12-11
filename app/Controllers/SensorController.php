@@ -59,6 +59,9 @@ class SensorController
         $response = curl_exec( $ch );
     }
 
+    /**
+     * Gets all the sensor data from the database.
+     */
     public function get()
     {
         if (in_array($_SERVER['SERVER_NAME'], Config::ALLOWED_SERVERS))

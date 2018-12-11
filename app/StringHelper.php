@@ -3,6 +3,10 @@ namespace App;
 
 class StringHelper 
 {
+    /**
+     * Gets the substring of a string without cutting off any words.
+     * For use in the article summaries.
+     */
     public static function substrWithoutCuttingWords($string, $length = 200)
     {
         $string = html_entity_decode($string);

@@ -90,6 +90,10 @@ class RegisterController
         $view->render();
     }
 
+    /**
+     * Verifies an account, called when the user clicks the verification 
+     * link in the email sent to them upon registration.
+     */
     public function verify()
     {
         if (isset($_GET['email']) && isset($_GET['hash']))
