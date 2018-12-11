@@ -1,11 +1,5 @@
     <main role="main">
             <div class="container">
-                <h1 class="my-4">Articles</h1>
-                <?php if ($loggedIn) { ?>
-                    <p>It looks like you are a reporter! You can use the button below to create an article.</p>
-                    <a class="btn btn-success" href="index.php?controller=article&action=create" role="button">Create Article</a>
-                <?php } ?>
-                <p>Click for RSS: <a href="public/rss/newsfeed.xml"><img src="public/img/pic_rss.gif" /></a></p>
 
                 <div class="row my-4">
                     <div class="col">
@@ -16,7 +10,12 @@
                         <div id="forecast" class="card-group"></div>            
                     </div>
                 </div>
-
+                <h1 class="my-4">Articles</h1>
+                <p>Subscribe to RSS: <a href="public/rss/newsfeed.xml"><img src="public/img/pic_rss.gif" /></a></p>
+                <?php if ($isReporter) { ?>
+                    <p>It looks like you are a reporter! You can use the button below to create an article.</p>
+                    <a class="btn btn-success" href="index.php?controller=article&action=create" role="button">Create Article</a>
+                <?php } ?>
                 <div class="row my-4">
                     <?php
                     if (sizeof($articles) < 1)
@@ -24,14 +23,15 @@
                     else foreach ($articles as $article)
                     { ?>
                     <div class="col-md-4 d-flex">
-                        <div class="card mb-4 shadow-sm">
+                        <div class="card mb-4 shadow-sm"> 
                             <img class="card-img-top" src="<?= $article['HeadlineImageUrl'] ?>" />
-                            <div class="card-body">
+                            <div class="card-body" >
+                                
                                 <h4 class="card-title">
                                     <a href="index.php?controller=article&action=single&id=<?= $article['ID'] ?>">
                                         <?= $article['Headline'] ?>
                                     </a>
-                                </h4>
+                                </h4><span class="text-muted"><?= date_format(date_create($article['DateTime']), 'jS \of F, Y') ?></span>
                                 <p class="card-text"><?= $article['Content'] ?></p>
                                 <a href="index.php?controller=article&action=single&id=<?= $article['ID'] ?>" class="btn btn-primary">
                                     Read more
@@ -66,7 +66,7 @@
                 </nav>
 
                 <div class="row my-4">
-                    <div class="col">
+                    <div class="col-md-6 mx-auto">
                         <div class="card">
                             <div class="card-header">Filter Articles</div>
                             <div class="card-body">
@@ -99,7 +99,11 @@ function getWeatherData() {
         var date = new Date($.now());
         $("#forecast-text").html(
             'The weather forecast in Scranton from <a href="https://openweathermap.org">OpenWeatherMap.</a> ' +
-            'Last updated at: ' + date.getHours() + ":" + date.getMinutes());
+            'Last updated at: ' 
+                + date.getHours() + ":" 
+                + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()
+                + ":"
+                + (date.getSeconds() < 10 ? '0' : '') + date.getSeconds());
         $("#forecast").html('');
         
         $.each(result, function(i, field) { 

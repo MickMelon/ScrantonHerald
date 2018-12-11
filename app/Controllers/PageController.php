@@ -22,7 +22,7 @@ class PageController
      */
     public function our_rss()
     {
-        $scrantonFeedUrl = "http://localhost:8080/uni/public/rss/newsfeed.xml";
+        $scrantonFeedUrl = "public/rss/newsfeed.xml";
         $feed = simplexml_load_file($scrantonFeedUrl);
 
         $view = new View('Pages/rss');

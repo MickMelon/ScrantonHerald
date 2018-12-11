@@ -3,6 +3,7 @@
         <div class="col-md-8 mx-auto">
             <h3><?= $feedTitle; ?></h3>
             <h6><?= $feedDescription; ?></h6>
+            <p>RSS File: <a href="public/rss/newsfeed.xml"><img src="public/img/pic_rss.gif" /></a></p>
             <?php foreach ($items as $item) { ?>
             <div class="card card-outline-secondary my-3">
                 <div class="card-header"><?= $item->title; ?></div>

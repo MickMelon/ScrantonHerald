@@ -187,7 +187,6 @@ class ArticleController
 
             // Create the article and display the success page.
             $this->articleModel->createArticle($headline, $headlineImage, $content, $file, $reporterId);
-            return;
             header('Location: index.php?controller=article&action=success');
         }
         else
@@ -282,10 +281,21 @@ class ArticleController
             $userId = $_SESSION['id'];
 
             $this->commentModel->createComment($articleId, $commentId, $userId, $content);
-            header('Location: index.php?controller=article&action=single&id=' . $articleId);
+            header('Location: index.php?controller=article&action=reply_success&id=' . $articleId);
         }
         else 
             header('Location: index.php');
+    }
+
+    public function reply_success()
+    {
+        if (isset($_GET['id']))
+        {
+            $view = new View('Articles/replysuccess');
+            $view->assign('id', $_GET['id']);
+            $view->render();
+        }
+        else header('Location: index.php');
     }
 
     public function update()
@@ -350,7 +360,7 @@ class ArticleController
         if (!is_array($result))
         {
             $response = new \StdClass;
-            $response->link = 'http://localhost:8080/uni/' . $result;
+            $response->link = 'https://mayar.abertay.ac.uk/~1800833/twix/' . $result;
             $json = json_encode($response, JSON_UNESCAPED_SLASHES);
 
             header('Content-Type: application/json');

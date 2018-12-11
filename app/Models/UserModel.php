@@ -49,6 +49,8 @@ class UserModel
         $query->execute();
 
         $result = $query->fetch();
+        if ($result == null) return null;
+        
         if (password_verify($password, $result->Password))
             return json_encode($result);
 

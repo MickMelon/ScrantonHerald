@@ -33,8 +33,11 @@ class ArticleModel
     {
         $db = Database::getInstance();
 
-        $sql = "SELECT * FROM `Article` WHERE `DateTime` BETWEEN :dateFrom"
-                . " AND :dateTo ORDER BY `DateTime` DESC";
+        $sql = "SELECT * FROM `Article` WHERE"
+                . " `DateTime` BETWEEN :dateFrom AND :dateTo"
+                . " OR CAST(`DateTime` AS DATE) = CAST(:dateFrom AS DATE) "
+                . " OR CAST(`DateTime` AS DATE) = CAST(:dateTo AS DATE) "
+                . " ORDER BY `DateTime` DESC";
         $query = $db->prepare($sql);
         $query->bindParam(':dateFrom', $dateFrom, PDO::PARAM_STR);
         $query->bindParam(':dateTo', $dateTo, PDO::PARAM_STR);
@@ -133,7 +136,7 @@ class ArticleModel
     {
         $db = Database::getInstance();
 
-        $sql = "DELETE FROM `Article` WHERE `ID` = :articleId";
+        $sql = "DELETE a.*, c.* FROM Comment c LEFT JOIN Article a ON a.ID = c.ArticleID WHERE c.ArticleID = :articleId";
         $query = $db->prepare($sql);
         $query->bindParam(':articleId', $articleId, PDO::PARAM_INT);
 

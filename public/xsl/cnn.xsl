@@ -11,7 +11,8 @@
             <div class="container">  
                 <div class="row">   
                     <div class="col-md-8 mx-auto">
-                        <a href="index.php">Go back to Scranton Herald</a>
+                        <a href="index.php">Go back to Scranton Herald</a><br />
+                        Would you like to use this XSLT file? <a href="public/xsl/cnn.xsl">Click here.</a>
                         <br /><br />
                         <xsl:apply-templates select="rss/channel/title" />
                         <xsl:apply-templates select="rss/channel/description" />

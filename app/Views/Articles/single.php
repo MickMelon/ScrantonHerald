@@ -13,13 +13,20 @@
             <p class="lead">Posted by <b><?= $reporter['FirstName'] ?> <?= $reporter['LastName'] ?></b> on the <b><?= date_format(date_create($article['DateTime']), 'jS \of F, Y') ?></b></p>
             <img class="img-fluid rounded mx-auto" src="<?= $article['HeadlineImageUrl'] ?>" alt="">
             <hr />
-            <?php if ($article['FileUrl'] != '') { ?>
+
+            <div class="fr-view text-justify"><?= $article['Content'] ?></div>
+            <?php if ($article['FileUrl'] != '') { 
+                if (substr($article['FileUrl'], 0, 4) === "http") { ?>
             <div class="embed-responsive embed-responsive-16by9" <?= $fileIsAudio ? 'style="height:2em;"' : '' ?>>
                 <iframe class="embed-responsive-item" src="<?= $article['FileUrl'] ?>" allowfullscreen></iframe>
             </div>
-            <?php } ?>
-            <div class="fr-view text-justify"><?= $article['Content'] ?></div>
-            
+            <?php } else { ?>
+            <div>
+                <video width="100%" controls muted>
+                    <source src="<?= $article['FileUrl'] ?>" type="video/mp4" />
+                </video>
+            </div>
+            <?php } } ?>
             <!-- Comments -->
             <hr />
             <h3>Comments</h3>

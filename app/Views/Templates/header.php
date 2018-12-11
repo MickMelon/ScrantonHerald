@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="shortcut icon" href="public/favicon.ico" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="public/vendor/bootstrap/css/bootstrap.min.css" />
@@ -61,7 +62,7 @@
                 </span>
             </div>
         </nav>
-        <section class="jumbotron">
+        <section class="jumbotron border-bottom" style="background-image: url(public/img/header.png); background-size: cover;">
             <div class="container">
                 <h1 class="jumbotron-heading"><?= $siteName ?></h1>
                 <p class="lead text-muted"><?= $siteDesc ?></p>

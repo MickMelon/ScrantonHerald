@@ -76,7 +76,7 @@ class CommentModel
 
         $sql = "SELECT * FROM `Comment` " .
             "WHERE `ParentCommentId` = :commentId " .
-            "ORDER BY `DateTime` DESC";
+            "ORDER BY `DateTime` ASC";
         $query = $db->prepare($sql);
         $query->bindParam(':commentId', $commentId, PDO::PARAM_INT);
         $query->execute();
